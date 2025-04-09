@@ -27,7 +27,7 @@ def get_access_token():
             "Content-Type": "application/json"
         }
  
-        auth_response = requests.post(AUTH_URL, json=auth_payload, headers=auth_headers,verify=False)
+        auth_response = requests.post(AUTH_URL, json=auth_payload, headers=auth_headers)
         if auth_response.status_code == 200:
             auth_data = auth_response.json()
             access_token = auth_data.get("Acess_Token")
@@ -65,7 +65,7 @@ def fetch_data_with_token(token):
         }
         
         # Send the GET request
-        response = requests.get(formatted_url, headers=headers,verify=False)
+        response = requests.get(formatted_url, headers=headers)
         
         # Check if the request was successful
         if response.status_code == 200:
