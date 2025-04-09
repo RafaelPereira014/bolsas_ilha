@@ -59,11 +59,11 @@ def insert_data_to_db(json_data, db_config):
                 candidato_aval_curricular = candidato['NotaAvCurricular']
                 candidato_prova_conhecimentos = candidato['NotaProvaConhecimentos']
                 candidato_nota_final = candidato['candidatoNotaFinal']
-                deficiencia = candidato.get('hasDeficiencia')
+                deficiencia = str(candidato.get('hasDeficiencia')).lower()  # Convert to string and lowercase
                 if deficiencia == 'true':
-                    candidato_deficiencia='sim'
+                    candidato_deficiencia = 'sim'
                 else:
-                    candidato_deficiencia='não'
+                    candidato_deficiencia = 'não'
                     
                 Estado = 'livre'
                 

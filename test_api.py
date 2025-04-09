@@ -57,7 +57,7 @@ def fetch_data_with_token(token):
 
     try:
         # Format the URL with the token
-        formatted_url = f"https://outsyqa.azores.gov.pt/BEPA_Services_BL/rest/BolsaIlhas/CandidatoBolsaIlhasV2?Acess_Token={token}&OfertaNumber=56%2F2025"
+        formatted_url = f"https://outsysqa.azores.gov.pt/BEPA_Services_BL/rest/BolsaIlhas/CandidatoBolsaIlhasV2?Acess_Token={token}&OfertaNumber=56%2F2025"
         
         # Set the headers for the GET request
         headers = {
