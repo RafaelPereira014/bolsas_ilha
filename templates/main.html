@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='images/GBI.png') }}" type="image/png"> 
+    <title>Página Principal</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Include Chart.js -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Plataforma de Gestão das Bolsas de Ilha - <span>Procedimento concursal centralizado SER</span></h1>
+        </header>
+        
+
+        <div class="sidebar">
+            <ul>
+                <li><a href="/mainpage">Página Principal</a></li>
+                <li><a href="/selectionpage">Inserção de vagas</a></li>
+                <li><a href="/consulta">Lista única Ordenação Final</a></li>
+            </ul>
+            <button class="toggle-button">Bolsas de Ilha</button>
+            <ul class="bolsas-menu" style="display:none;">
+                <li><a href="/Bolsas/SaoMiguel">Bolsa de Ilha São Miguel</a></li>
+                <li><a href="/Bolsas/Terceira">Bolsa de Ilha Terceira</a></li>
+                <li><a href="/Bolsas/SantaMaria">Bolsa de Ilha Santa Maria</a></li>
+                <li><a href="/Bolsas/Faial">Bolsa de Ilha Faial</a></li>
+                <li><a href="/Bolsas/Pico">Bolsa de Ilha Pico</a></li>
+                <li><a href="/Bolsas/SaoJorge">Bolsa de Ilha São Jorge</a></li>
+                <li><a href="/Bolsas/Graciosa">Bolsa de Ilha Graciosa</a></li>
+                <li><a href="/Bolsas/Flores">Bolsa de Ilha Flores</a></li>
+                <li><a href="/Bolsas/Corvo">Bolsa de Ilha Corvo</a></li>
+            </ul>
+            <ul>
+                <li><a href="/minhaconta">Minha conta</a></li>
+                <li><a href="/add_user">Adicionar candidato</a></li>
+                <li><a href="/import_users_data">Importar notas</a></li>
+
+                <li><a href="/logout">Terminar sessão</a></li>
+            </ul>
+        </div>
+
+        <div class="content">
+            <h2>Oferta a decorrer: {{curr_oferta}}</h2>
+            <!-- Row of icons -->
+            <div class="icon-row">
+                <div class="icon-card">
+                    <i class="bi bi-briefcase-fill"></i>
+                    <h3>Bolsas</h3>
+                    <h3>{{no_bolsas}}</h3>
+                </div>
+                <div class="icon-card">
+                    <i class="bi bi-person-fill"></i>
+                    <h3>Candidatos</h3>
+                    <h3>{{no_users}}</h3>
+                </div>
+                <div class="icon-card">
+                    <i class="bi bi-check-circle-fill"></i>
+                    <h3>Colocados</h3>
+                    <h3>{{no_colocados}}</h3>
+                </div>
+            </div>
+
+            <!-- Statistics Section -->
+            <div class="statistics-row">
+                <div class="stat-card">
+                    <h3>Vagas pedidas por Ilha</h3>
+                    <canvas id="vagasPerBolsaChart"></canvas>
+
+                </div>
+                <div class="stat-card">
+                    <h3>Colocados por Escola</h3>
+                    <canvas id="candidatosChart"></canvas>
+                </div>
+                <div class="stat-card">
+                    <h3>Percentagem de Colocados</h3>
+                    <canvas id="colocadosChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Recent Updates Table -->
+            <h3>Atividades Recentes</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Atividade</th>
+                        <th>Data</th>
+                        <th>Utilizador</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Adicionou 10 novas vagas</td>
+                        <td>2025-01-01</td>
+                        <td>Ana Silva</td>
+                    </tr>
+                    <tr>
+                        <td>Atualizou a lista de candidatos</td>
+                        <td>2025-01-01</td>
+                        <td>João Pereira</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Toggle bolsas menu
+        document.querySelector('.toggle-button').addEventListener('click', function() {
+            const bolsasMenu = document.querySelector('.bolsas-menu');
+            bolsasMenu.style.display = bolsasMenu.style.display === 'block' ? 'none' : 'block';
+        });
+        const vagasData = {{ vagas | tojson }};
+        console.log(vagasData); // Debug data
+    
+        const bolsaLabels = vagasData.map(item => item.bolsa_nome);
+        const vagasCounts = vagasData.map(item => item.total_vagas);
+    
+        const vagasPerBolsaCtx = document.getElementById('vagasPerBolsaChart').getContext('2d');
+        new Chart(vagasPerBolsaCtx, {
+            type: 'bar',  // Vertical bar chart
+            data: {
+                labels: bolsaLabels,
+                datasets: [{
+                    label: 'Total Vagas',
+                    data: vagasCounts,
+                    backgroundColor: 'rgba(40, 167, 69, 0.5)', // Green
+                    borderColor: 'rgba(40, 167, 69, 1)', // Dark green border
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }, // Hide legend if not needed
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.raw} vagas`; // Show tooltip when hovering
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        title: { display: true, text: 'Bolsas' }
+                    },
+                    y: {
+                        title: { display: true, text: 'Total Vagas' },
+                        beginAtZero: true // Ensure the y-axis starts at 0
+                    }
+                }
+            }
+        });
+    </script>
+    
+
+    <script>
+        // Data passed from Flask
+        const totalAceite = {{ total_aceite }};
+        const totalNegado = {{ total_negado }};
+        
+        // Percentagem de Colocados Chart
+        const colocadosCtx = document.getElementById('colocadosChart').getContext('2d');
+        new Chart(colocadosCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Aceite', 'Negado'],
+                datasets: [{
+                    label: 'Colocados',
+                    data: [totalAceite, totalNegado],
+                    backgroundColor: [
+                        'rgba(40, 167, 69, 0.5)', // Green
+                        'rgba(220, 53, 69, 0.5)'  // Red
+                    ],
+                    borderColor: [
+                        'rgba(40, 167, 69, 1)',
+                        'rgba(220, 53, 69, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+    </script>
+
+    <script>
+        // Data passed from Flask
+        const colocadosPerEscola = {{ colocados_per_escola | tojson }};
+        
+        // Extract labels (schools) and data (counts)
+        const escolaLabels = Object.keys(colocadosPerEscola);
+        const colocadosData = Object.values(colocadosPerEscola);
+    
+        // Generate muted color palette
+        const mutedColors = escolaLabels.map((_, i) => {
+            const hue = (i * 360) / escolaLabels.length; // Spread hues evenly
+            return `hsl(${hue}, 40%, 60%)`; // Softer saturation and lightness
+        });
+    
+        // Generate the doughnut chart
+        const candidatosCtx = document.getElementById('candidatosChart').getContext('2d');
+        new Chart(candidatosCtx, {
+            type: 'doughnut', // Doughnut chart
+            data: {
+                labels: escolaLabels, // Labels will not be shown directly
+                datasets: [{
+                    label: 'Colocados',
+                    data: colocadosData,
+                    backgroundColor: mutedColors, // Use muted colors
+                    borderColor: 'rgba(255, 255, 255, 1)', // White border between segments
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }, // Hide legend
+                    tooltip: {
+                        callbacks: {
+                            title: function(context) {
+                                // Show the school name on hover
+                                return context[0].label;
+                            },
+                            label: function(context) {
+                                return `${context.raw} colocados`;
+                            }
+                        }
+                    }
+                },
+                cutout: '60%', // Inner circle size for doughnut
+            }
+        });
+    </script>
+</body>
+</html>

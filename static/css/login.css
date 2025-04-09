@@ -1,0 +1,132 @@
+/* General Body Styles */
+body {
+    background-color: #f0f4f8; /* Light, cool background for a refreshing feel */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Clean, modern font */
+    color: #333; /* Darker text for readability */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full viewport height */
+}
+
+/* Login Container */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column; /* Center items vertically */
+    width: 100%;
+}
+
+/* Login Form Styles */
+.login-form {
+    background-color: #ffffff; /* White background for clean appearance */
+    padding: 40px;
+    border-radius: 16px; /* More pronounced rounded corners for a modern look */
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1); /* Softer, more refined shadow */
+    width: 100%;
+    max-width: 380px; /* Limit form width for better responsiveness */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
+}
+
+.login-form:hover {
+    transform: translateY(-6px); /* Subtle lift effect on hover */
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
+}
+
+/* Form Title */
+.login-form h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #2c3e50; /* Darker, more sophisticated text color */
+    font-size: 2rem; /* Larger, bold title */
+    font-weight: 700; /* Strong title font weight */
+}
+
+/* Input Fields */
+.login-form input[type="text"],
+.login-form input[type="password"] {
+    width: 100%; /* Full-width inputs */
+    padding: 15px; /* Increased padding for comfort */
+    margin-bottom: 20px; /* Space between inputs */
+    border: 1px solid #ddd; /* Light border */
+    border-radius: 10px; /* Rounded corners for inputs */
+    font-size: 16px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for focus */
+    box-sizing: border-box; /* Prevents overflow */
+}
+
+/* Focused Input States */
+.login-form input[type="text"]:focus,
+.login-form input[type="password"]:focus {
+    border-color: #007bff; /* Highlight border on focus */
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.3); /* Subtle shadow effect */
+    outline: none; /* Remove default outline */
+}
+
+/* Submit Button */
+.login-form button {
+    width: 100%; /* Full-width button */
+    padding: 14px;
+    background-color: #007bff; /* Bright, attractive blue */
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition */
+}
+
+/* Button Hover Effect */
+.login-form button:hover {
+    background-color: #0056b3; /* Darker blue when hovered */
+    transform: translateY(-3px); /* Slight lift on hover */
+}
+
+/* Login Form Link */
+.login-form p {
+    text-align: center;
+    margin-top: 20px;
+    color: #777; /* Softer text color */
+}
+
+.login-form a {
+    color: #007bff; /* Blue link color */
+    text-decoration: none; /* Remove underline */
+    font-weight: 600; /* Bold link text */
+}
+
+/* Link Hover Effect */
+.login-form a:hover {
+    text-decoration: underline; /* Underline on hover for interaction */
+}
+
+/* Additional Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.login-form {
+    animation: fadeIn 1s ease-out; /* Fade-in effect for the form */
+}
+
+/* Responsive Design for Mobile */
+@media (max-width: 500px) {
+    .login-form {
+        padding: 30px; /* Reduce padding on smaller screens */
+    }
+
+    .login-form h2 {
+        font-size: 1.6rem; /* Smaller title font on mobile */
+    }
+
+    .login-form input[type="text"],
+    .login-form input[type="password"],
+    .login-form button {
+        font-size: 14px; /* Adjust input font size for smaller screens */
+    }
+}

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/add_user.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='images/GBI.png') }}" type="image/png"> <!-- Favicon -->
+
+    
+    <title>Adicionar Candidato</title>
+    <style>
+        /* Add your CSS styling here */
+        .order-display {
+            font-weight: bold;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Plataforma de Gestão das Bolsas de Ilha - <span>Procedimento concursal centralizado SER</span></h1>
+        </header>
+
+        <div class="sidebar">
+            <ul>
+                <li><a href="/mainpage">Página Principal</a></li>
+                <li><a href="/selectionpage">Inserção de vagas</a></li>
+                <li><a href="/consulta">Lista única Ordenação Final</a></li>
+            </ul>
+            <button class="toggle-button">Bolsas de Ilha</button>
+            <ul class="bolsas-menu" style="display:none;">
+                <li><a href="/Bolsas/SaoMiguel">Bolsa de Ilha São Miguel</a></li>
+                <li><a href="/Bolsas/Terceira">Bolsa de Ilha Terceira</a></li>
+                <li><a href="/Bolsas/SantaMaria">Bolsa de Ilha Santa Maria</a></li>
+                <li><a href="/Bolsas/Faial">Bolsa de Ilha Faial</a></li>
+                <li><a href="/Bolsas/Pico">Bolsa de Ilha Pico</a></li>
+                <li><a href="/Bolsas/SaoJorge">Bolsa de Ilha São Jorge</a></li>
+                <li><a href="/Bolsas/Graciosa">Bolsa de Ilha Graciosa</a></li>
+                <li><a href="/Bolsas/Flores">Bolsa de Ilha Flores</a></li>
+                <li><a href="/Bolsas/Corvo">Bolsa de Ilha Corvo</a></li>
+            </ul>
+            <ul>
+                <li><a href="/minhaconta">Minha conta</a></li>
+                <li><a href="/add_user">Adicionar candidato</a></li>
+                <li><a href="/import_users_data">Importar notas</a></li>
+
+                <li><a href="/logout">Terminar sessão</a></li>
+            </ul>
+        </div>
+
+        <div class="form_container">
+            <form method="POST" action="/add_user">
+                <h3>Informações do Candidato</h3>
+        
+                <!-- User Fields -->
+                <div class="user-section">
+                    <div class="form-group">
+                        <label for="nome">Nome:</label>
+                        <input type="text" id="nome" name="nome" required>
+                    </div>
+        
+                    <div class="form-group">
+                        <label for="contacto">Contacto:</label>
+                        <input type="text" id="contacto" name="contacto">
+                    </div>
+        
+                    <div class="form-group">
+                        <label for="deficiencia">Possui algum grau de deficiência:</label>
+                        <select id="deficiencia" name="deficiencia">
+                            <option value="-">-</option>
+                            <option value="sim">Sim</option>
+                            <option value="nao">Não</option>
+                        </select>
+                    </div>
+        
+                    <div class="form-group">
+                        <label for="avaliacao_curricular">Avaliação Curricular:</label>
+                        <input type="number" id="avaliacao_curricular" name="avaliacao_curricular" step="0.01" oninput="calculateNotaFinal()">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="prova_de_conhecimentos">Prova de Conhecimentos:</label>
+                        <input type="number" id="prova_de_conhecimentos" name="prova_de_conhecimentos" step="0.01" oninput="calculateNotaFinal()">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="nota_final">Nota Final:</label>
+                        <input type="number" id="nota_final" name="nota_final" step="0.01" readonly>
+                    </div>
+        
+                    <div class="form-group">
+                        <label for="estado">Estado:</label>
+                        <select id="estado" name="estado">
+                            <option value="-">-</option>
+                            <option value="livre">Livre</option>
+                            <option value="a aguardar resposta">A Aguardar Resposta</option>
+                            <option value="negado">Negado</option>
+                            <option value="aceite">Aceite</option>
+                        </select>
+                    </div>
+        
+                    <div class="form-group">
+                        <label for="observacoes">Observações:</label>
+                        <textarea id="observacoes" name="observacoes" rows="4"></textarea>
+                    </div>
+                </div>
+        
+                <!-- Bolsa e Escolas Section -->
+                <h3>Bolsa e Escolas</h3>
+                <div class="bolsa-escola-container">
+                    {% for bolsa in bolsas %}
+                    <div class="bolsa-section">
+                        <h4>{{ bolsa[1] }}</h4>
+                        <label for="bolsa_id_{{ bolsa[0] }}">Selecionar:</label>
+                        <input type="checkbox" id="bolsa_id_{{ bolsa[0] }}" name="bolsa_id[]" value="{{ bolsa[0] }}">
+                        
+                        <div class="contrato-section">
+                            <label for="contrato_id_{{ bolsa[0] }}">Tipo de Contrato:</label>
+                            <select id="contrato_id_{{ bolsa[0] }}" name="contrato_id_{{ bolsa[0] }}">
+                                <option value="-">-</option>
+                                <option value="1">CTFP por tempo indeterminado</option>
+                                <option value="2">CTFP a termo resolutivo</option>
+                                <option value="3">CTFP por tempo indeterminado e CTFP a termo resolutivo</option>
+                            </select>
+                        </div>
+                
+                        <div class="escola-section">
+                            <h5>Escolha as Escolas para a Bolsa de {{ bolsa[1] }}</h5>
+                            <div class="escola-list">
+                                {% for escola in escolas_per_bolsa[bolsa[0]] %}
+                                <div class="escola-item">
+                                    <label for="escola_id_{{ bolsa[0] }}_{{ escola[0] }}">{{ escola[1] }}</label>
+                                    <input type="checkbox" class="escola-checkbox" id="escola_id_{{ bolsa[0] }}_{{ escola[0] }}" 
+                                           name="escola_id_{{ bolsa[0] }}[]" 
+                                           value="{{ escola[0] }}">
+                                    <span class="order-display" id="order_id_{{ bolsa[0] }}_{{ escola[0] }}">Ordem: N/A</span>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <button type="submit">Adicionar Candidato</button>
+            </form>
+        </div>
+        
+    </div>
+</body>
+
+<script>
+    // Initialize an array to hold the checked school checkbox IDs
+    let orderedChecks = [];
+
+    function updateOrder() {
+        // Reset all order displays
+        const orderDisplays = document.querySelectorAll('.order-display');
+        orderDisplays.forEach(display => display.innerText = "Ordem: N/A");
+    
+        // Remove all previous order input fields
+        document.querySelectorAll('.order-input').forEach(input => input.remove());
+    
+        // Update the order display and create hidden inputs for checked school checkboxes
+        orderedChecks.forEach((id, index) => {
+            const orderDisplay = document.getElementById('order_id_' + id);
+            if (orderDisplay) {
+                orderDisplay.innerText = "Ordem: " + (index + 1);
+    
+                // Create a hidden input to store the order of each escola_id
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'order_id_' + id; // e.g., order_id_1_2 (bolsa_id_escola_id)
+                input.value = index + 1; // Store the order value (starting from 1)
+                input.classList.add('order-input'); // Add a class for easy removal later
+    
+                // Append the hidden input to the form
+                document.querySelector('form').appendChild(input);
+            }
+        });
+    }
+
+    // Select all school checkboxes
+    const schoolCheckboxes = document.querySelectorAll('.escola-checkbox');
+
+    // Add event listeners to each school checkbox
+    schoolCheckboxes.forEach(check => {
+        check.addEventListener('change', function () {
+            // Get the id for ordering (both bolsa and escola IDs)
+            const bolsaId = this.id.split('_')[2]; // Extract the bolsa ID
+            const escolaId = this.id.split('_')[3]; // Extract the escola ID
+            
+            // Create a combined ID for ordering
+            const id = bolsaId + '_' + escolaId;
+
+            // Update orderedChecks based on checkbox state
+            if (this.checked) {
+                orderedChecks.push(id);
+            } else {
+                const index = orderedChecks.indexOf(id);
+                if (index > -1) {
+                    orderedChecks.splice(index, 1);
+                }
+            }
+            // Update order display
+            updateOrder();
+        });
+    });
+</script>
+<script>
+    function calculateNotaFinal() {
+        const avaliacaoCurricular = parseFloat(document.getElementById('avaliacao_curricular').value) || 0;
+        const provaConhecimentos = parseFloat(document.getElementById('prova_de_conhecimentos').value) || 0;
+        
+        // Calculate the average
+        const notaFinal = (avaliacaoCurricular + provaConhecimentos) / 2;
+
+        // Set the calculated value in the 'nota_final' field
+        document.getElementById('nota_final').value = notaFinal.toFixed(2); // Rounded to 2 decimal places
+    }
+</script>
+<script>
+    document.querySelector('.toggle-button').addEventListener('click', function() {
+        const bolsasMenu = document.querySelector('.bolsas-menu');
+        bolsasMenu.style.display = bolsasMenu.style.display === 'block' ? 'none' : 'block';
+    });
+</script>
+</html>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/results.css') }}">
+    <title>Resultados da Pesquisa</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/GBI.png') }}" type="image/png"> <!-- Favicon -->
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Resultados da Pesquisa</h1>
+        </header>
+        <div class="sidebar">
+            <ul>
+                <li><a href="/mainpage">Página Principal</a></li>
+                <li><a href="/selectionpage">Inserção de vagas</a></li>
+                <li><a href="/consulta">Lista única Ordenação Final</a></li>
+            </ul>
+            <button class="toggle-button">Bolsas de Ilha</button>
+            <ul class="bolsas-menu" style="display:none;">
+                <li><a href="/Bolsas/SaoMiguel">Bolsa de Ilha São Miguel</a></li>
+                <li><a href="/Bolsas/Terceira">Bolsa de Ilha Terceira</a></li>
+                <li><a href="/Bolsas/SantaMaria">Bolsa de Ilha Santa Maria</a></li>
+                <li><a href="/Bolsas/Faial">Bolsa de Ilha Faial</a></li>
+                <li><a href="/Bolsas/Pico">Bolsa de Ilha Pico</a></li>
+                <li><a href="/Bolsas/SaoJorge">Bolsa de Ilha São Jorge</a></li>
+                <li><a href="/Bolsas/Graciosa">Bolsa de Ilha Graciosa</a></li>
+                <li><a href="/Bolsas/Flores">Bolsa de Ilha Flores</a></li>
+                <li><a href="/Bolsas/Corvo">Bolsa de Ilha Corvo</a></li>
+            </ul>
+            <ul>
+                <li><a href="/minhaconta">Minha conta</a></li>
+                <li><a href="/add_user">Adicionar candidato</a></li>
+                <li><a href="/import_users_data">Importar notas</a></li>
+
+                <li><a href="/logout">Terminar sessão</a></li>
+            </ul>
+        </div>
+
+        <div class="content">
+            {% for escola_nome, candidatos in candidates_by_school.items() %}
+                <h2>Resultados da colocação {{date_today}} - {{ escola_nome }}</h2>
+                <h3>Número de vagas normais: {{ initial_vagas_per_escola[escola_nome].vagas_normais }}</h3>
+                <p>Vagas com deficiência: {{ initial_vagas_per_escola[escola_nome].vagas_deficiencia_obrigatorias }}</p>
+                <p>Número de colocados: {{ candidatos|length }}</p>
+                <p>Tipo de contrato: {{ contrato_tipo }}</p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Nota Final</th>
+                            <th>Deficiência</th>
+                            <th>Prioridade da Escola</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if candidatos %}
+                            {% for candidate in candidatos %}
+                                <tr>
+                                    <td>{{ candidate.candidato_id }}</td>
+                                    <td>{{ candidate.nome }}</td>
+                                    <td>{{ candidate.nota_final }}</td>
+                                    <td>{{ candidate.deficiencia }}</td>
+                                    <td>{{ candidate.escola_priority_id }}</td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="5">Nenhum dado disponível</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+                <!-- Fix: Use tojson to safely pass the candidates' data -->
+                <button class="email-btn" data-escola="{{ escola_nome }}" data-candidates='{{ candidatos|tojson }}'>Enviar Email para {{ escola_nome }}</button>
+            {% endfor %}
+        </div>
+
+        
+    </div>
+
+    <!-- Modal -->
+    <div id="emailModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Enviar Email para <span id="escolaName"></span></h2>
+            <div class="email-form">
+                <input type="hidden" id="escolaInput" name="escola" value="">
+                <label for="email">Email Destinatário:</label>
+                <input type="email" id="email" name="email" placeholder="Insira o email da escola" required>
+
+                <label for="emailMessage">Mensagem:</label>
+                <textarea id="emailMessage" name="message" placeholder="Escreva a sua mensagem aqui"></textarea>
+
+                <button id="sendEmailBtn">Enviar Email</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.querySelector('.toggle-button').addEventListener('click', function() {
+            const bolsasMenu = document.querySelector('.bolsas-menu');
+            bolsasMenu.style.display = bolsasMenu.style.display === 'block' ? 'none' : 'block';
+        });
+        // Get modal elements
+        const modal = document.getElementById('emailModal');
+        const escolaName = document.getElementById('escolaName');
+        const escolaInput = document.getElementById('escolaInput');
+        const emailMessage = document.getElementById('emailMessage');
+        const sendEmailBtn = document.getElementById('sendEmailBtn');
+    
+        // Open the modal and populate the fields
+        document.querySelectorAll('.email-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const escola = this.getAttribute('data-escola');
+                const candidates = JSON.parse(this.getAttribute('data-candidates'));
+    
+                // Fill in the school name and hidden input
+                escolaName.textContent = escola;
+                escolaInput.value = escola;
+    
+                // Clear the previous message content
+                emailMessage.value = '';
+    
+                // Dynamically build the message content with candidates' info
+                let messageContent = `Prezado(a) responsável da escola ${escola},\n\nSegue abaixo a lista de candidatos selecionados:\n\n`;
+    
+                candidates.forEach(candidate => {
+                    messageContent += `ID: ${candidate.candidato_id}, Nome: ${candidate.nome}, Nota Final: ${candidate.nota_final}, Deficiência: ${candidate.deficiencia}, Prioridade da Escola: ${candidate.escola_priority_id}\n`;
+                });
+    
+                messageContent += `\nAtenciosamente,\n`;
+                emailMessage.value = messageContent;
+    
+                // Display the modal
+                modal.style.display = 'block';
+            });
+        });
+    
+        // Close the modal
+        document.querySelector('.close').addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
+    
+        // Close the modal if clicked outside of it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        };
+    
+        // Handle email sending logic
+        sendEmailBtn.addEventListener('click', function() {
+            const email = document.getElementById('email').value;
+            const message = emailMessage.value;
+            const escola = escolaInput.value;
+    
+            if (email && message) {
+                // AJAX request to send the email
+                fetch('/send-email', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        message: message,
+                        escola: escola
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        alert('Email enviado com sucesso!');
+                    } else {
+                        alert(`Erro ao enviar email: ${data.message}`);
+                    }
+                    modal.style.display = 'none';  // Close the modal after "sending"
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Ocorreu um erro ao enviar o email.');
+                });
+            } else {
+                alert('Por favor, insira o email e a mensagem antes de enviar.');
+            }
+        });
+    </script>
+</body>
+</html>

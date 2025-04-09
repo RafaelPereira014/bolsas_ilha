@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/user_profile.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/consulta.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="{{ url_for('static', filename='images/GBI.png') }}" type="image/png"> <!-- Favicon -->
+
+
+    <title>User Profile</title>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Plataforma de Gestão das Bolsas de Ilha - <span>Procedimento concursal centralizado SER</span></h1>
+
+        </header>
+
+        <div class="sidebar">
+            <ul>
+                <li><a href="/mainpage">Página Principal</a></li>
+                <li><a href="/selectionpage">Inserção de vagas</a></li>
+                <li><a href="/consulta">Lista única Ordenação Final</a></li>
+            </ul>
+            <button class="toggle-button">Bolsas de Ilha</button>
+            <ul class="bolsas-menu" style="display:none;">
+                <li><a href="/Bolsas/SaoMiguel">Bolsa de Ilha São Miguel</a></li>
+                <li><a href="/Bolsas/Terceira">Bolsa de Ilha Terceira</a></li>
+                <li><a href="/Bolsas/SantaMaria">Bolsa de Ilha Santa Maria</a></li>
+                <li><a href="/Bolsas/Faial">Bolsa de Ilha Faial</a></li>
+                <li><a href="/Bolsas/Pico">Bolsa de Ilha Pico</a></li>
+                <li><a href="/Bolsas/SaoJorge">Bolsa de Ilha São Jorge</a></li>
+                <li><a href="/Bolsas/Graciosa">Bolsa de Ilha Graciosa</a></li>
+                <li><a href="/Bolsas/Flores">Bolsa de Ilha Flores</a></li>
+                <li><a href="/Bolsas/Corvo">Bolsa de Ilha Corvo</a></li>
+            </ul>
+            <ul>
+                <li><a href="/minhaconta">Minha conta</a></li>
+                <li><a href="/add_user">Adicionar candidato</a></li>
+                <li><a href="/import_users_data">Importar notas</a></li>
+
+                <li><a href="/logout">Terminar sessão</a></li>
+            </ul>
+        </div>
+
+        <div class="content">
+            <h2>{{ user_info.nome }}</h2>
+            <div class="contact-info">
+                <table>
+                    <tr>
+                        <th>Email:</th>
+                        <td>{{ user_info.email }}</td>
+                    </tr>
+                    <tr>
+                        <th>Portador de deficiencia:</th>
+                        <td>{{ user_info.deficiencia }}</td>
+                    </tr>
+                    <tr>
+                        <th>Contacto:</th>
+                        <td>{{ user_info.contacto }}</td>
+                    </tr>
+                    <tr>
+                        <th>NIF:</th>
+                        <td>{{ user_info.NIF}}</td>
+                    </tr>
+                    <tr>
+                        <th>Local de realização da prova:</th>
+                        <td>{{ user_info.local_prova }}</td>
+                    </tr>
+                    
+                    <tr>
+                        <th>Estado:</th>
+                        <td>
+                            {% if user_info.estado == "livre" %}
+                                <i class="fas fa-check-circle" style="color: green;"></i> Livre
+                            {% elif user_info.estado == "a aguardar resposta" %}
+                                <i class="fas fa-clock" style="color: orange;"></i> A Aguardar Resposta
+                            {% elif user_info.estado == "aceite" %}
+                                <i class="fas fa-thumbs-up" style="color: blue;"></i> Aceite
+                            {% elif user_info.estado == "negado" %}
+                                <i class="fas fa-thumbs-down" style="color: red;"></i> Excluído
+                            {% else %}
+                                <i class="fas fa-question-circle" style="color: gray;"></i> Estado Desconhecido
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% if user_info.estado == "a aguardar resposta" or user_info.estado == "aceite" %}
+                    <tr>
+                        <th>Distribuição SGC:</th>
+                        <td>
+                            <a href="{{ user_info.distribuicao }}" target="_blank">
+                              {{ user_info.distribuicao }}
+                            </a>
+                          </td>
+                    </tr>
+                    {%endif%}
+                </table>
+            </div>
+            
+            <div class="grades-section">
+                <h3>Notas e Avaliações</h3>
+                <table>
+                    <tr>
+                        <th>Prova de Conhecimentos:</th>
+                        <td>{{ user_info.prova_de_conhecimentos }}</td>
+                    </tr>
+                    <tr>
+                        <th>Avaliação Curricular:</th>
+                        <td>{{ user_info.avaliacao_curricular }}</td>
+                    </tr>
+                    
+                    <tr>
+                        <th>Nota Final:</th>
+                        <td>{{ user_info.nota_final }}</td>
+                    </tr>
+                    <tr>
+                        <th>Escolas e prioridades:</th>
+                        <td>
+                            <button onclick="showEscolasPopup({{ user_info.id }}, '{{ user_info.nome }}')">Ver Escolas</button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            
+
+            
+                <div class="current-bolsa-section">
+                    <h3>Bolsa Atual</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Estado</th>
+                                <th>Bolsa</th>
+                                <th>Escola</th>
+                                <th>Tipo contrato</th>
+                                <th>Prioridade</th>
+                                <th>Data</th>
+                                <th>Alterado por</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if colocados %}
+                                {% for colocado in colocados %}
+                                    <tr>
+                                        <td>{{ colocado.estado}}</td>
+                                        <td>{{ colocado.bolsa_nome }}</td>
+                                        <td>{{ colocado.escola_nome }}</td>
+                                        <td>{{ colocado.tipo_contrato }}</td>
+                                        <td>{{ colocado.escola_priority_id }}</td>
+                                        <td>{{ colocado.placement_date }}</td>
+                                        <td>{{ colocado.alterado_por if colocado.alterado_por else '-' }}</td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="6">Não existem dados disponiveis sobre este utilizador.</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+
+            <div class="documents-section">
+                <h3>Documentos Importantes</h3>
+                <form method="POST" action="/upload_document/{{ user_info.id }}" enctype="multipart/form-data">
+                    <input type="file" name="documento">
+                    <button type="submit">Anexar Documento</button>
+                </form>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Documentos</th>
+                            <th>Ações</th> <!-- New header for actions -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for doc in user_info.documentos %}
+                        <tr>
+                            <td>
+                                <a href="{{ url_for('static', filename='/uploads/' + doc.file_name) }}" download>{{ doc.file_name }}</a>
+                            </td>
+                            <td>
+                                <form method="POST" action="/remove_document/{{ user_info.id }}/{{ doc.file_name }}">
+                                    <button type="submit">Remover</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <form method="POST" action="{{ url_for('user_profile', user_id=user_info['id']) }}">
+                <div class="additional-info">
+                    <h3>Informações Adicionais</h3>
+                    <textarea id="additional-info" name="additional-info" rows="5" cols="50">{{ user_info.observacoes }}</textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Atualizar Informações</button>
+            </form>
+        </div>
+        
+    </div>
+</body>
+<!-- Popup Modal -->
+<div id="escolasModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2 id="modalTitle">Escolas e Prioridades</h2>
+        <div id="escolasList"></div>
+    </div>
+</div>
+<script>
+    document.querySelector('.toggle-button').addEventListener('click', function() {
+        const bolsasMenu = document.querySelector('.bolsas-menu');
+        bolsasMenu.style.display = bolsasMenu.style.display === 'block' ? 'none' : 'block';
+    });
+</script>
+
+<script>
+    function showEscolasPopup(userId, userName) {
+        const escolasList = document.getElementById('escolasList');
+        const modalTitle = document.getElementById('modalTitle');
+        escolasList.innerHTML = ""; // Clear previous content
+    
+        // Set the user's name in the modal title
+        modalTitle.textContent = `Escolas e Prioridades de ${userName}`;
+    
+        fetch(`/view_escolas/${userId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data && data.length) {
+                    data.forEach(escola => {
+                        const escolaInfo = document.createElement('div');
+                        escolaInfo.textContent = `${escola.escola_nome}, Prioridade: ${escola.escola_priority_id}`;
+                        escolasList.appendChild(escolaInfo);
+                    });
+                } else {
+                    escolasList.textContent = "Nenhuma escola encontrada.";
+                }
+                document.getElementById('escolasModal').style.display = "block"; // Show modal
+            })
+            .catch(error => {
+                console.error("Error fetching escolas:", error);
+                escolasList.textContent = "Erro ao carregar escolas. Tente novamente.";
+            });
+    }
+    
+    function closeModal() {
+        document.getElementById('escolasModal').style.display = "none"; // Hide modal
+    }
+</script>
+</html>

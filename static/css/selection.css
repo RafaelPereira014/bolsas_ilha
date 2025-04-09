@@ -1,0 +1,79 @@
+/* General container for the form */
+.form-horizontal {
+    display: flex;
+    flex-wrap: wrap;  /* Allow wrapping if the container is small */
+    justify-content: space-between;
+    gap: 20px; /* Space between form groups */
+}
+
+/* Form group styling for each label/input pair */
+.form-group {
+    display: flex;
+    align-items: center;
+    width: 48%; /* Adjust width for two columns */
+    margin-bottom: 15px; /* Space between rows */
+}
+
+/* Labels styling */
+.form-group label {
+    width: 40%;  /* Adjust this to control the label size relative to the input */
+    margin-right: 10px; /* Space between label and input */
+    font-size: 1rem;
+    font-weight: 600; /* Bold for better visibility */
+    color: #333333; /* Dark gray for label text */
+}
+
+/* Inputs and selects styling */
+.form-group input,
+.form-group select {
+    width: 60%;  /* Adjust this to make inputs larger than labels */
+    padding: 10px; /* Padding inside the inputs */
+    border: 1px solid #B2C2D8; /* Soft blue-gray border */
+    border-radius: 4px; /* Rounded corners */
+    font-size: 1rem;  /* Font size for the input text */
+    box-sizing: border-box;  /* Ensure padding doesn't exceed the total width */
+    background-color: #FFFFFF; /* White background for inputs */
+    color: #2C3E50; /* Dark blue text inside inputs */
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #0056b3; /* Deep blue border on focus */
+    outline: none;
+}
+
+/* Styling for buttons */
+.form-group button {
+    padding: 10px 20px;
+    background-color: #007BFF; /* Bright blue background for the button */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.form-group button:hover {
+    background-color: #0056b3;  /* Darker blue on hover */
+}
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+    .form-group {
+        width: 100%; /* Make each form group full-width on small screens */
+    }
+
+    .form-group label,
+    .form-group input,
+    .form-group select {
+        width: 100%; /* Make labels and inputs full width */
+        text-align: left; /* Align label text to the left */
+    }
+    
+    .form-group input,
+    .form-group select {
+        margin-top: 5px; /* Add space between label and input on smaller screens */
+    }
+}

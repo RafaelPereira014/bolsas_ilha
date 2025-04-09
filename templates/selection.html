@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/selection.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='images/GBI.png') }}" type="image/png"> <!-- Favicon -->
+
+    <title>Introdução de vagas</title>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Plataforma de Gestão das Bolsas de Ilha - <span>Procedimento concursal centralizado SER</span></h1>
+        </header>
+
+        <div class="sidebar">
+            <ul>
+                <li><a href="/mainpage">Página Principal</a></li>
+                <li><a href="/selectionpage">Inserção de vagas</a></li>
+                <li><a href="/consulta">Lista única Ordenação Final</a></li>
+            </ul>
+            <button class="toggle-button">Bolsas de Ilha</button>
+            <ul class="bolsas-menu" style="display:none;">
+                <li><a href="/Bolsas/SaoMiguel">Bolsa de Ilha São Miguel</a></li>
+                <li><a href="/Bolsas/Terceira">Bolsa de Ilha Terceira</a></li>
+                <li><a href="/Bolsas/SantaMaria">Bolsa de Ilha Santa Maria</a></li>
+                <li><a href="/Bolsas/Faial">Bolsa de Ilha Faial</a></li>
+                <li><a href="/Bolsas/Pico">Bolsa de Ilha Pico</a></li>
+                <li><a href="/Bolsas/SaoJorge">Bolsa de Ilha São Jorge</a></li>
+                <li><a href="/Bolsas/Graciosa">Bolsa de Ilha Graciosa</a></li>
+                <li><a href="/Bolsas/Flores">Bolsa de Ilha Flores</a></li>
+                <li><a href="/Bolsas/Corvo">Bolsa de Ilha Corvo</a></li>
+            </ul>
+            <ul>
+                <li><a href="/minhaconta">Minha conta</a></li>
+                <li><a href="/add_user">Adicionar candidato</a></li>
+                <li><a href="/import_users_data">Importar notas</a></li>
+
+                <li><a href="/logout">Terminar sessão</a></li>
+            </ul>
+        </div>
+
+        <div class="content">
+            <h2>Formulário de inserção de vagas</h2>
+            <form id="selectionForm" action="/submit_selection" method="POST" class="form-horizontal" novalidate>
+                <div class="form-group">
+                    <label for="distribuicao">Distribuição SGC:</label>
+                    <input type="text" id="distribuicao" name="distribuicao" placeholder="Insira a distribuição associada" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="numero">Número de vagas:</label>
+                    <input type="number" id="numero" name="numero" placeholder="Insira o número de candidatos" required oninput="calculateVagas()">
+                </div>
+
+                <div class="form-group">
+                    <label for="ilha">Bolsa de Ilha:</label>
+                    <select id="ilha" name="ilha" required>
+                        <option value="">Selecione a bolsa/ilha</option>
+                        {% for bolsa in bolsas %}
+                            <option value="{{ bolsa[0] }}">{{ bolsa[1] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="escola">Unidade Orgânica:</label>
+                    <select id="escola" name="escola" required>
+                        <option value="">Selecione a escola</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="contrato">Tipo de vínculo:</label>
+                    <select id="contrato" name="contrato_id" required>
+                        <option value="">Selecione o tipo de vínculo</option>
+                        <option value="1">CTFP por tempo indeterminado</option>
+                        <option value="2">CTFP a termo resolutivo</option>
+                    </select>
+                </div>
+
+                <!-- Fields to display calculated values -->
+                <div class="form-group">
+                    <label for="vagas_normais">Vagas:</label>
+                    <input type="number" id="vagas_normais" name="vagas_normais" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="vagas_deficiencia">Número de lugares a preencher por pessoas com deficiência:</label>
+                    <input type="number" id="vagas_deficiencia" name="vagas_deficiencia" readonly>
+                </div>
+                
+
+                <div class="form-group">
+                    <button type="button" id="addSchoolBtn">Submeter vagas</button>
+                </div>
+
+                <div class="selected-schools">
+                    <h3>Vagas introduzidas</h3>
+                    <table id="selectedSchoolsTable">
+                        <thead>
+                            <tr>
+                                <th>Unigade Orgânica</th>
+                                <th>Número de vagas</th>
+                                <th>Lugares cota</th>
+                                <th>Tipo de vínculo</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Selected schools will be added here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Hidden inputs for selected schools and their vagas -->
+                <div id="hiddenInputsContainer"></div>
+
+                <div class="form-group">
+                    <button type="submit">Submeter</button>
+                </div>
+            </form>
+        </div>
+
+        
+    </div>
+
+    <script>
+        // Toggle bolsas menu
+        document.querySelector('.toggle-button').addEventListener('click', function() {
+            const bolsasMenu = document.querySelector('.bolsas-menu');
+            bolsasMenu.style.display = bolsasMenu.style.display === 'block' ? 'none' : 'block';
+        });
+
+        // Fetch escolas based on bolsa selected
+        document.getElementById('ilha').addEventListener('change', function() {
+            const bolsaId = this.value;
+            const escolaSelect = document.getElementById('escola');
+    
+            escolaSelect.innerHTML = '<option value="">Selecione a escola</option>';  // Clear previous options
+    
+            if (bolsaId) {
+                fetch(`/get_escolas/${bolsaId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        data.escolas.forEach(escola => {
+                            const option = document.createElement('option');
+                            option.value = escola;
+                            option.textContent = escola;
+                            escolaSelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => console.error('Error fetching escolas:', error));
+            }
+        });
+
+        // Function to calculate vagas based on input
+        function calculateVagas() {
+            const totalVagas = parseInt(document.getElementById('numero').value);
+            let vagasDeficiencia = 0;
+
+            if (totalVagas >= 10) {
+                vagasDeficiencia = Math.floor(totalVagas * 0.20);
+            } else if (totalVagas >= 3) {
+                vagasDeficiencia = 1;
+            }
+            
+            const vagasNormais = totalVagas - vagasDeficiencia;
+
+            document.getElementById('vagas_normais').value = vagasNormais;
+            document.getElementById('vagas_deficiencia').value = vagasDeficiencia;
+        }
+
+        document.getElementById('addSchoolBtn').addEventListener('click', function() {
+            const distribuicao = document.getElementById('distribuicao').value; // Get distribuiçao
+            const escolaSelect = document.getElementById('escola');
+            const bolsaSelect = document.getElementById('ilha');
+            const selectedBolsa = bolsaSelect.value;
+            const selectedValue = escolaSelect.value;
+            const selectedText = escolaSelect.options[escolaSelect.selectedIndex].text;
+            const vagasInput = document.getElementById('vagas_normais').value;
+            const vagasInputDeficiencia = document.getElementById('vagas_deficiencia').value;
+            const contratoSelect = document.getElementById('contrato');
+            const selectedContrato = contratoSelect.value;
+        
+            if (selectedValue && vagasInput && contratoSelect.value && distribuicao) {
+                // Add selected school to the table
+                const tableBody = document.getElementById('selectedSchoolsTable').querySelector('tbody');
+                const row = document.createElement('tr');
+        
+                row.innerHTML = `
+                    <td>${selectedText}</td>
+                    <td>${vagasInput}</td>
+                    <td>${vagasInputDeficiencia}</td>
+                    <td>${contratoSelect.options[contratoSelect.selectedIndex].text}</td>
+                    <td><button class="removeSchoolBtn">Remover</button></td>
+                `;
+                tableBody.appendChild(row);
+        
+                // Create hidden inputs for the selected school and its details
+                const hiddenInputsContainer = document.getElementById('hiddenInputsContainer');
+                const hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = 'escolas[]';
+                hiddenInput.value = `${selectedText}:${vagasInput}:${vagasInputDeficiencia}:${selectedBolsa}:${distribuicao}`;
+                hiddenInputsContainer.appendChild(hiddenInput);
+                
+                // Clear the school selection but keep the other inputs
+                escolaSelect.value = '';
+        
+                // Add event listener to remove button
+                row.querySelector('.removeSchoolBtn').addEventListener('click', function() {
+                    tableBody.removeChild(row);
+                    hiddenInputsContainer.removeChild(hiddenInput);
+                });
+            } else {
+                alert('Por favor, preencha todos os campos antes de adicionar uma escola.');
+            }
+        });
+    </script>
+</body>
+</html>

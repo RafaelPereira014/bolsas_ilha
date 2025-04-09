@@ -1,0 +1,113 @@
+/* Icon Row Styles */
+.icon-row {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+}
+
+.icon-card {
+    flex: 1;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    text-align: center;
+    padding: 20px;
+    margin: 0 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.icon-card img {
+    max-width: 60px;
+    margin-bottom: 10px;
+}
+
+.icon-card h3 {
+    font-size: 1.2rem;
+    color: #0056b3;
+}
+
+.icon-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Statistics Row */
+.statistics-row {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+}
+
+.stat-card {
+    flex: 1;
+    background-color: #e8f0fe;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 0 10px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: #0056b3;
+}
+
+.graph-placeholder {
+    background-color: #ffffff;
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    padding: 40px 0;
+    color: #ccc;
+    font-size: 1rem;
+}
+
+/* Table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    background-color: #ffffff;
+}
+
+th {
+    background-color: #0056b3;
+    color: white;
+}
+
+tbody tr:hover {
+    background-color: #e3f2fd;
+}
+
+.icon-row {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 0;
+}
+
+.icon-card {
+    text-align: center;
+    padding: 20px;
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    width: 25%;
+}
+
+.icon-card i {
+    font-size: 2.5rem;
+    color: #007bff;
+    margin-bottom: 10px;
+}
+
+.icon-card h3 {
+    font-size: 1.2rem;
+    margin-top: 10px;
+    color: #495057;
+}

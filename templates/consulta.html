@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/consulta.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="{{ url_for('static', filename='images/GBI.png') }}" type="image/png"> <!-- Favicon -->
+
+    <title>Metadata page</title>
+    <style>
+        /* Remove underline and change link color in table headers */
+        th a, td a {
+            text-decoration: none; /* Remove underline */
+            color: inherit; /* Use the color of the th */
+        }
+
+        th a:hover {
+            background-color: transparent; /* Remove hover effect */
+            color: inherit; /* Keep the same color on hover */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        .icon {
+            margin-right: 5px;
+        }
+
+        .search-container {
+            margin-top: 20px;
+        }
+        .search-container input {
+            padding: 10px;
+            width: 20%;
+            box-sizing: border-box;
+        }
+
+        /* Styling for filter buttons */
+        .filter-buttons {
+            margin-top: 10px;
+        }
+
+        .filter-buttons button {
+            padding: 10px 15px;
+            margin-right: 10px;
+            cursor: pointer;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+        }
+
+        .filter-buttons button:hover {
+            background-color: #0056b3;
+        }
+
+        .filter-buttons button.active {
+            background-color: #0056b3; /* Active button styling */
+        }
+        /* Gray background for rows with estado 'negado' */
+        .negado-row {
+            background-color: #d3d3d3; /* Light gray color */
+        }
+    </style>
+    <style>
+        /* Your existing styles */
+        .search-container {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .search-container input {
+            padding: 10px;
+            width: 300px;
+            box-sizing: border-box;
+            margin-right: 10px;
+        }
+        .search-container button {
+            padding: 10px 15px;
+            margin-right: 5px;
+            cursor: pointer;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+        }
+        .search-container button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Plataforma de Gestão das Bolsas de Ilha - <span>Procedimento concursal centralizado SER</span></h1>
+        </header>
+
+        <div class="sidebar">
+            <ul>
+                <li><a href="/mainpage">Página Principal</a></li>
+                <li><a href="/selectionpage">Inserção de vagas</a></li>
+                <li><a href="/consulta">Lista única Ordenação Final</a></li>
+            </ul>
+            <button class="toggle-button">Bolsas de Ilha</button>
+            <ul class="bolsas-menu" style="display:none;">
+                <li><a href="/Bolsas/SaoMiguel">Bolsa de Ilha São Miguel</a></li>
+                <li><a href="/Bolsas/Terceira">Bolsa de Ilha Terceira</a></li>
+                <li><a href="/Bolsas/SantaMaria">Bolsa de Ilha Santa Maria</a></li>
+                <li><a href="/Bolsas/Faial">Bolsa de Ilha Faial</a></li>
+                <li><a href="/Bolsas/Pico">Bolsa de Ilha Pico</a></li>
+                <li><a href="/Bolsas/SaoJorge">Bolsa de Ilha São Jorge</a></li>
+                <li><a href="/Bolsas/Graciosa">Bolsa de Ilha Graciosa</a></li>
+                <li><a href="/Bolsas/Flores">Bolsa de Ilha Flores</a></li>
+                <li><a href="/Bolsas/Corvo">Bolsa de Ilha Corvo</a></li>
+            </ul>
+            <ul>
+                <li><a href="/minhaconta">Minha conta</a></li>
+                <li><a href="/add_user">Adicionar candidato</a></li>
+                <li><a href="/import_users_data">Importar notas</a></li>
+
+                <li><a href="/logout">Terminar sessão</a></li>
+            </ul>
+        </div>
+
+        <div class="content">
+            <h2>Lista única de ordenação final {{curr_oferta}}</h2>
+            
+            <!-- Filter buttons for estados -->
+            <div class="filter-buttons">
+                <button data-estado="all" class="filter-button active">Todos</button>
+                <button data-estado="livre" class="filter-button">Livre</button>
+                <button data-estado="a aguardar resposta" class="filter-button">A Aguardar Resposta</button>
+                <button data-estado="aceite" class="filter-button">Aceite</button>
+                <button data-estado="negado" class="filter-button">Excluído</button>
+            </div>
+
+             <!-- Search Input -->
+             <div class="search-container">
+                <input type="text" id="search-input" placeholder="Pesquisar nome do candidato...">
+                <button id="search-button">Pesquisar</button>
+                <button id="clear-button">Limpar</button>
+            </div>
+
+
+            <form method="POST" action="{{ url_for('limpar_estados') }}">
+                <button type="submit" class="btn-limpar-estados">Limpar Estados</button>
+            </form>
+
+            
+
+            <table>
+                <thead>
+                    <tr>
+                       
+                        <th>Nome Candidato</th>
+                        <th>Classificação Final</th>
+                        <th><a href="{{ url_for('bolsa_sao_miguel') }}">Bolsa de Ilha de São Miguel</a></th>
+                        <th><a href="{{ url_for('bolsa_terceira') }}">Bolsa de Ilha Terceira</a></th>
+                        <th><a href="{{ url_for('bolsa_santa_maria') }}">Bolsa de Ilha Santa Maria</a></th>
+                        <th><a href="{{ url_for('bolsa_faial') }}">Bolsa de Ilha Faial</a></th>
+                        <th><a href="{{ url_for('bolsa_pico') }}">Bolsa de Ilha Pico</a></th>
+                        <th><a href="{{ url_for('bolsa_sao_jorge') }}">Bolsa de Ilha São Jorge</a></th>
+                        <th><a href="{{ url_for('bolsa_graciosa') }}">Bolsa de Ilha Graciosa</a></th>
+                        <th><a href="{{ url_for('bolsa_flores') }}">Bolsa de Ilha Flores</a></th>
+                        <th><a href="{{ url_for('bolsa_corvo') }}">Bolsa de Ilha Corvo</a></th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                    {% if scores %}
+                        {% for score in scores %}
+                        <tr data-estado="{{ score.estado }}">
+                            <td><a href="{{ url_for('user_profile', user_id=score.id) }}">{{ score.nome }}</a></td>
+                            <td>{{ score.nota_final }}</td>
+                            <td>{{ '✔️' if 42 in score.bolsa_ids else '❌' }}</td>
+                            <td>{{ '✔️' if 43 in score.bolsa_ids else '❌' }}</td>
+                            <td>{{ '✔️' if 41 in score.bolsa_ids else '❌' }}</td>
+                            <td>{{ '✔️' if 47 in score.bolsa_ids else '❌' }}</td>
+                            <td>{{ '✔️' if 46 in score.bolsa_ids else '❌' }}</td>
+                            <td>{{ '✔️' if 45 in score.bolsa_ids else '❌' }}</td>
+                            <td>{{ '✔️' if 44 in score.bolsa_ids else '❌' }}</td>
+                            <td>{{ '✔️' if 48 in score.bolsa_ids else '❌' }}</td>
+                            <td>{{ '✔️' if 49 in score.bolsa_ids else '❌' }}</td>
+                            <!-- Add other bolsa columns as before -->
+                            <td>
+                            {% if score.estado == "livre" %}
+                                <i class="fas fa-check-circle" style="color: green;"></i> Livre
+                            {% elif score.estado == "a aguardar resposta" %}
+                                <i class="fas fa-clock" style="color: orange;"></i> A Aguardar Resposta
+                            {% elif score.estado == "aceite" %}
+                                <i class="fas fa-thumbs-up" style="color: blue;"></i> Aceite
+                            {% elif score.estado == "negado" %}
+                                <i class="fas fa-thumbs-down" style="color: red;"></i> Excluído
+                            {% else %}
+                                <i class="fas fa-question-circle" style="color: gray;"></i> Estado Desconhecido
+                            {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="4">No data available</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+            <!-- Pagination -->
+            <div class="pagination-container">
+                <button id="prev-page" disabled>Anterior</button>
+                <span id="page-info">Página 1 de 1</span>
+                <button id="next-page" disabled>Próxima</button>
+            </div>
+
+            
+        </div>
+
+        
+    </div>
+</body>
+<script>
+    document.querySelector('.toggle-button').addEventListener('click', function() {
+        const bolsasMenu = document.querySelector('.bolsas-menu');
+        bolsasMenu.style.display = bolsasMenu.style.display === 'block' ? 'none' : 'block';
+    });
+    const rowsPerPage = 10;
+    let currentPage = 1;
+    const tableBody = document.getElementById('table-body');
+    const rows = Array.from(tableBody.querySelectorAll('tr'));
+    const searchInput = document.getElementById('search-input');
+    const searchButton = document.getElementById('search-button');
+    const clearButton = document.getElementById('clear-button');
+    const prevPageBtn = document.getElementById('prev-page');
+    const nextPageBtn = document.getElementById('next-page');
+    const pageInfo = document.getElementById('page-info');
+    const filterButtons = document.querySelectorAll('.filter-button');
+    let selectedEstado = 'all';
+
+    function updateTable() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const filteredRows = rows.filter(row => {
+            const rowEstado = row.getAttribute('data-estado');
+            const matchesSearch = row.textContent.toLowerCase().includes(searchTerm);
+            const matchesFilter = selectedEstado === 'all' || rowEstado === selectedEstado;
+            return matchesSearch && matchesFilter;
+        });
+
+        const totalPages = Math.ceil(filteredRows.length / rowsPerPage);
+        currentPage = Math.min(currentPage, totalPages);
+
+        const start = (currentPage - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
+
+        tableBody.innerHTML = '';
+        filteredRows.slice(start, end).forEach(row => tableBody.appendChild(row));
+
+        // Update pagination
+        prevPageBtn.disabled = currentPage === 1;
+        nextPageBtn.disabled = currentPage === totalPages || totalPages === 0;
+        pageInfo.textContent = `Página ${currentPage} de ${totalPages || 1}`;
+    }
+
+    searchButton.addEventListener('click', () => {
+        currentPage = 1;
+        updateTable();
+    });
+
+    clearButton.addEventListener('click', () => {
+        searchInput.value = '';
+        currentPage = 1;
+        updateTable();
+    });
+
+    prevPageBtn.addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            updateTable();
+        }
+    });
+
+    nextPageBtn.addEventListener('click', () => {
+        currentPage++;
+        updateTable();
+    });
+
+    // Add click event listeners to all filter buttons
+    filterButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            // Remove active class from all buttons
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+
+            // Add active class to the clicked button
+            button.classList.add('active');
+
+            // Update selectedEstado from the clicked button
+            selectedEstado = button.getAttribute('data-estado');
+
+            // Reset to first page and update the table
+            currentPage = 1;
+            updateTable();
+        });
+    });
+
+    // Initial table update
+    updateTable();
+</script>
+
+    
+
+</html>

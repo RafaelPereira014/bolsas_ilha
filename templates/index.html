@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='images/GBI.png') }}" type="image/png"> <!-- Favicon -->
+    <title>Gestao de Bolsas de Ilha</title>
+</head>
+<body>
+    <div class="welcome-container">
+        <div class="welcome-message">
+            <h1>Bem vindo à Plataforma de Gestão das Bolsas de Ilha </h1>
+            <p>Procedimento concursal centralizado SER</p>
+            <a href="{{ url_for('login') }}" class="btn">Login</a>
+        </div>
+    </div>
+</body>
+</html>

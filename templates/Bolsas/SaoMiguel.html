@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/consulta.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="{{ url_for('static', filename='images/GBI.png') }}" type="image/png"> <!-- Favicon -->
+
+
+    <title>Bolsa de Ilha São Miguel</title>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Plataforma de Gestão das Bolsas de Ilha - <span>Procedimento concursal centralizado SER</span></h1>
+        </header>
+
+        <div class="sidebar">
+            <ul>
+                <li><a href="/mainpage">Página Principal</a></li>
+                <li><a href="/selectionpage">Inserção de vagas</a></li>
+                <li><a href="/consulta">Lista única Ordenação Final</a></li>
+            </ul>
+            <button class="toggle-button">Bolsas de Ilha</button>
+            <ul class="bolsas-menu" style="display:none;">
+                <li><a href="/Bolsas/SaoMiguel">Bolsa de Ilha São Miguel</a></li>
+                <li><a href="/Bolsas/Terceira">Bolsa de Ilha Terceira</a></li>
+                <li><a href="/Bolsas/SantaMaria">Bolsa de Ilha Santa Maria</a></li>
+                <li><a href="/Bolsas/Faial">Bolsa de Ilha Faial</a></li>
+                <li><a href="/Bolsas/Pico">Bolsa de Ilha Pico</a></li>
+                <li><a href="/Bolsas/SaoJorge">Bolsa de Ilha São Jorge</a></li>
+                <li><a href="/Bolsas/Graciosa">Bolsa de Ilha Graciosa</a></li>
+                <li><a href="/Bolsas/Flores">Bolsa de Ilha Flores</a></li>
+                <li><a href="/Bolsas/Corvo">Bolsa de Ilha Corvo</a></li>
+            </ul>
+            <ul>
+                <li><a href="/minhaconta">Minha conta</a></li>
+                <li><a href="/add_user">Adicionar candidato</a></li>
+                <li><a href="/import_users_data">Importar notas</a></li>
+
+                <li><a href="/logout">Terminar sessão</a></li>
+            </ul>
+        </div>
+        <div class="content">
+            <h2>Bolsa de Ilha São Miguel</h2>
+            <!-- Document Upload Form -->
+            <form action="/upload_document_bolsa/1" method="POST" enctype="multipart/form-data">
+                <label for="document"></label>
+                <input type="file" id="document" name="document" accept=".pdf,.doc,.docx,.txt">
+                <button type="submit">Upload</button>
+            </form>
+
+            <div class="uploaded-documents">
+                <h3>Documentos:</h3>
+                <ul class="document-list">
+                    {% for document in uploaded_documents %}
+                        <li class="document-item">
+                            <a href="{{ url_for('static', filename='/uploads/' + document.filename) }}" download>
+                                <i class="{{ 'fas fa-file-pdf' if document.filename.endswith('.pdf') else 'fas fa-file-word' if document.filename.endswith('.docx') else 'fas fa-file-alt' }}"></i>
+                                {{ document.filename }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <a href="{{ url_for('bolsa_sao_miguel', download_xlsx='true') }}">Download Excel</a>
+
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome candidato</th>
+                        <th>Prova de Conhecimentos</th>
+                        <th>Avaliação Curricular</th>
+                        <th>Classificação final</th>
+                        <th>Bolsa de Ilha São Miguel</th>
+                        <th>CTFP</th>
+                        <th>Estado</th> <!-- Added Status column -->
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in user_info %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td><a href="{{ url_for('user_profile', user_id=user.id) }}">{{ user.nome }}</a></td>
+                        <td>{{ user.prova_de_conhecimentos }}</td>
+                        <td>{{ user.avaliacao_curricular }}</td>
+
+                        <td>{{ user.nota_final }}</td>
+                        <td>
+                            <button onclick="showEscolasPopup({{ user.id }}, '{{ user.nome }}')">Ver Escolas</button>
+                        </td>
+                        <td>{{user.tipo_contrato}}</td>
+                        <td>
+                            <!-- Dropdown for status change -->
+                            <select onchange="updateStatus({{ user.id }}, this.value)">
+                                <option value="Livre" {% if user.estado == 'livre' %}selected{% endif %}>Livre</option>
+                                <option value="a aguardar resposta" {% if user.estado == 'a aguardar resposta' %}selected{% endif %}>A aguardar resposta</option>
+                                <option value="negado" {% if user.estado == 'negado' %}selected{% endif %}>Negado</option>
+                                <option value="aceite" {% if user.estado == 'aceite' %}selected{% endif %}>Aceite</option>
+                            </select>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="pagination">
+                {% if pagination %}
+                    {% if pagination.has_prev %}
+                        <a href="{{ url_for('bolsa_sao_miguel', page=pagination.page - 1) }}">&laquo; Anterior</a>
+                    {% endif %}
+            
+                    <span>Página {{ pagination.page }} de {{ pagination.total_pages }}</span>
+            
+                    {% if pagination.has_next %}
+                        <a href="{{ url_for('bolsa_sao_miguel', page=pagination.page + 1) }}">Próxima &raquo;</a>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+        
+        
+    </div>
+    
+    <!-- Confirmation Modal -->
+    <div id="confirmationModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeConfirmationModal()">&times;</span>
+            <h2>Confirmação</h2>
+            <p>Tem certeza de que deseja mudar o estado para "Negado"? Esta ação é irreversível.</p>
+    
+            <form id="exclusaoForm">
+                <h3>Motivos para exclusão:</h3>
+                <div>
+                    <input type="checkbox" id="motivo1" name="motivos" value="Documentos incompletos">
+                    <label for="motivo1">Documentos incompletos</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="motivo2" name="motivos" value="Critérios não atendidos">
+                    <label for="motivo2">Critérios não atendidos</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="motivo4" name="motivos" value="Dados inconsistentes">
+                    <label for="motivo4">Dados inconsistentes</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="motivo5" name="motivos" value="Outros">
+                    <label for="motivo5">Outros</label>
+                </div>
+            </form>
+    
+            <button id="confirmButton" onclick="submitExclusao()">Confirmar</button>
+            <button onclick="closeConfirmationModal()">Cancelar</button>
+        </div>
+    </div>
+    
+</body>
+<!-- Popup Modal -->
+<div id="escolasModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2 id="modalTitle">Escolas e Prioridades</h2>
+        <div id="escolasList"></div>
+    </div>
+</div>
+<script>
+    document.querySelector('.toggle-button').addEventListener('click', function() {
+        const bolsasMenu = document.querySelector('.bolsas-menu');
+        bolsasMenu.style.display = bolsasMenu.style.display === 'block' ? 'none' : 'block';
+    });
+</script>
+<script>
+    function showEscolasPopup(userId, userName) {
+        const escolasList = document.getElementById('escolasList');
+        const modalTitle = document.getElementById('modalTitle');
+        escolasList.innerHTML = ""; // Clear previous content
+    
+        // Set the user's name in the modal title
+        modalTitle.textContent = `Escolas e Prioridades de ${userName}`;
+    
+        // Fetch escolas for the selected user
+        fetch(`/view_escolas/${userId}/42`) // Update with your bolsa_id logic
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.length) {
+                    data.forEach(escola => {
+                        const escolaInfo = document.createElement('div');
+                        escolaInfo.textContent = `${escola.escola_nome}, Prioridade: ${escola.escola_priority_id}`;
+                        escolasList.appendChild(escolaInfo);
+                    });
+                } else {
+                    escolasList.textContent = "Nenhuma escola encontrada.";
+                }
+                document.getElementById('escolasModal').style.display = "block"; // Show modal
+            });
+    }
+    
+    function closeModal() {
+        document.getElementById('escolasModal').style.display = "none"; // Hide modal
+    }
+</script>
+<script>
+    let userIdToUpdate;
+    let newStatusToUpdate;
+
+    function updateStatus(userId, newStatus) {
+        // Check if the new status is 'negado'
+        if (newStatus === 'negado') {
+            // Show confirmation modal
+            userIdToUpdate = userId;
+            newStatusToUpdate = newStatus;
+            document.getElementById('confirmationModal').style.display = 'block';
+            return; // Exit the function to prevent the fetch call
+        }
+
+        // Proceed with the status update if not 'negado'
+        performStatusUpdate(userId, newStatus);
+    }
+
+    function performStatusUpdate(userId, newStatus) {
+        fetch(`/update_status`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                user_id: userId,
+                new_status: newStatus
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Status atualizado com sucesso');
+                location.reload(); // Reload the page after a successful update
+            } else {
+                alert('Erro ao atualizar o status');
+            }
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            alert('Ocorreu um erro ao atualizar o status');
+        });
+    }
+
+    // Close the confirmation modal
+    function closeConfirmationModal() {
+        document.getElementById('confirmationModal').style.display = 'none';
+    }
+
+    // Confirm the update
+    document.getElementById('confirmButton').addEventListener('click', function() {
+        closeConfirmationModal(); // Hide modal
+        performStatusUpdate(userIdToUpdate, newStatusToUpdate); // Perform the update
+    });
+
+    // Cancel the update and close the modal
+    document.getElementById('cancelButton').addEventListener('click', function() {
+        closeConfirmationModal(); // Hide modal
+        // Optionally reload the page or take other actions
+    });
+</script>
+
+<script>
+    document.getElementById('uploadForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        const formData = new FormData(this);
+
+        fetch(this.action, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Clear the current list
+                const documentList = document.getElementById('documentList');
+                documentList.innerHTML = '';
+
+                // Append the new documents
+                data.documents.forEach(doc => {
+                    const li = document.createElement('li');
+                    li.textContent = doc.filename; // Display the filename
+                    documentList.appendChild(li);
+                });
+            } else {
+                alert('Error uploading document: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while uploading the document');
+        });
+    });
+</script>
+<script>
+    document.getElementById('generate-pdf').addEventListener('click', function() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+    
+        // Table header
+        const header = ['Nome candidato', 'Prova de Conhecimentos', 'Avaliação Curricular', 'Classificação final', 'Bolsa de Ilha Terceira', 'Escolas e Prioridades', 'CTFP'];
+        let tableData = [];
+    
+        // Loop through the table rows
+        const rows = document.querySelectorAll('table tbody tr');
+    
+        const fetchPromises = Array.from(rows).map(row => {
+            const userId = row.querySelector('button').getAttribute('onclick').match(/showEscolasPopup\((\d+)/)[1]; // Extract userId
+            const rowData = Array.from(row.querySelectorAll('td'))
+                .slice(1, 7) // Get columns 1–5
+                .map(cell => cell.innerText);
+    
+            // Fetch schools and priorities for the user
+            return fetch(`/view_escolas/${userId}/1`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.length) {
+                        const escolas = data.map(escola => `${escola.escola_nome} (Prioridade: ${escola.escola_priority_id})`).join('; ');
+                        rowData.push(escolas); // Add schools and priorities to column 6
+                    } else {
+                        rowData.push("Nenhuma escola encontrada."); // Fallback for column 6
+                    }
+                    rowData.push(row.querySelectorAll('td')[6].innerText); // Add CTFP column data
+                    tableData.push(rowData); // Add the complete row to tableData
+                });
+        });
+    
+        // Wait for all fetch requests to complete
+        Promise.all(fetchPromises).then(() => {
+            // Add header and data to the PDF using autoTable
+            doc.autoTable({
+                head: [header],
+                body: tableData,
+                startY: 20, // Starts drawing the table 20 units from the top
+                theme: 'grid', // Grid style for the table
+                headStyles: {
+                    fillColor: [22, 160, 133] // Green color for header
+                }
+            });
+    
+            // Save the PDF file
+            doc.save('table_data.pdf');
+        });
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.24/jspdf.plugin.autotable.min.js"></script>
+</html>
