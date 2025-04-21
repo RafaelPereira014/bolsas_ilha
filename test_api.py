@@ -70,6 +70,7 @@ def fetch_data_with_token(token):
         # Check if the request was successful
         if response.status_code == 200:
             # Get the JSON data from the response
+            print("entrei ca dentro")
             data = response.json()
             print(data)
             # Insert the data into the database
