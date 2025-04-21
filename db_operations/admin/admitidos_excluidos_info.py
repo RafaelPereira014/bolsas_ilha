@@ -20,7 +20,7 @@ def insert_data_to_db(json_data, db_config):
             data_fim = dataend.split('T')[0]
             
            
-            for candidato in json_data['candidatos']:
+            for candidato in json_data['candidatosAdimitidosExcluidos']:
                 candidato_nome = candidato['candidatoNome']
                 candidato_nif = candidato['candidatoNIF']
                 local_prova_nome = candidato['localProvaNome']
