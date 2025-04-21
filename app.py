@@ -375,8 +375,9 @@ def gerar_lista():
     if not oferta_num:
         return jsonify({"error": "Oferta não fornecida"}), 400
 
+    encoded_oferta = urllib.parse.quote(oferta_num, safe='') 
     # Call the function to fetch data
-    result = fetch_data_with_token(oferta_num)
+    result = fetch_data_with_token(encoded_oferta)
     print(result)
 
     if result["status"] == "success":
