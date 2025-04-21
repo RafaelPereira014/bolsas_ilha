@@ -42,11 +42,11 @@ def fetch_data_with_token(oferta_num):
         formatted_url = f"https://outsysqa.azores.gov.pt/BEPA_Services_BL/rest/BolsaIlhas/CandidatoBolsaIlhasV2?Acess_Token={token}&OfertaNumber={oferta_num}"
         headers = {"Content-Type": "application/json"}
         response = requests.get(formatted_url, headers=headers)
-
+        print("entrei aqui")
         if response.status_code == 200:
             data = response.json()
-            print(data)
             insert_data_to_db(data, db_config)
+            print("entrei aqui")
             return {"status": "success", "data": data}
         else:
             return {"status": "error", "details": response.text}

@@ -378,9 +378,11 @@ def gerar_lista():
     encoded_oferta = urllib.parse.quote(oferta_num, safe='') 
     # Call the function to fetch data
     result = fetch_data_with_token(encoded_oferta)
-    print(result)
+    print("entrei aqui_gerar")
 
     if result["status"] == "success":
+        print("entrei aqui_sucess")
+
         return jsonify({"message": "Lista gerada com sucesso", "data": result["data"]})
     else:
         return jsonify({"error": "Erro ao gerar lista", "details": result.get("details", result.get("message"))}), 500
