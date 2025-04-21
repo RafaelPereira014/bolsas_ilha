@@ -9,6 +9,7 @@ from flask import request, send_file
 from flask import render_template, request, send_file
 from datetime import date
 from openpyxl import Workbook
+import urllib
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
 from config import AUTH_URL, CLIENT_ID, CLIENT_SECRET, db_config
@@ -18,6 +19,7 @@ from db_operations.consulting.db_consulting import *
 from db_operations.user.db_user import *
 from db_operations.admin.admin import *
 from db_operations.admin.api_info import *
+from db_operations.admin.admitidos_excluidos_CALL import *
 
 
 app = Flask(__name__)
@@ -360,11 +362,27 @@ def mainpage():
         vagas=vagas,
         curr_oferta=curr_oferta
     )
-@app.route('/import_users_data')
-def import_users():
+@app.route('/gerar_listas')
+def gerar_listas():
     
-    return render_template('import_user_data.html')
+    return render_template('gerar_listas.html')
 
+@app.route('/api/gerar_lista', methods=['POST'])
+def gerar_lista():
+    data = request.get_json()
+    oferta_num = data.get('oferta')
+
+    if not oferta_num:
+        return jsonify({"error": "Oferta não fornecida"}), 400
+
+    # Call the function to fetch data
+    result = fetch_data_with_token(oferta_num)
+    print(result)
+
+    if result["status"] == "success":
+        return jsonify({"message": "Lista gerada com sucesso", "data": result["data"]})
+    else:
+        return jsonify({"error": "Erro ao gerar lista", "details": result.get("details", result.get("message"))}), 500
 
 @app.route('/process_csv', methods=['POST'])
 def process_csv():
@@ -813,7 +831,6 @@ def bolsa_sao_miguel():
 
     uploaded_documents = get_uploaded_documents(bolsa_id)  # Fetch uploaded documents for this bolsa_id
     user_ids = has_bolsa(bolsa_id)  # Get the list of user IDs for the bolsa
-    print(user_ids)
     if not user_ids:
         return render_template('/Bolsas/SaoMiguel.html', user_info=[], escolas_bolsa=[], pagination=None, uploaded_documents=uploaded_documents)
 

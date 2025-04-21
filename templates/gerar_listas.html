@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/consulta.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='images/GBI.png') }}" type="image/png">
+    <title>Gerar listas</title>
+
+
+    <style>
+        
+    </style>
+    
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Plataforma de Gestão das Bolsas de Ilha - <span>Procedimento concursal centralizado SER</span></h1>
+            
+        </header>
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <ul>
+                <li><a href="/mainpage">Página Principal</a></li>
+                <li><a href="/selectionpage">Inserção de vagas</a></li>
+                <li><a href="/consulta">Lista única Ordenação Final</a></li>
+            </ul>
+            <button class="toggle-button">Bolsas de Ilha</button>
+            <ul class="bolsas-menu" style="display:none;">
+                <li><a href="/Bolsas/SaoMiguel">Bolsa de Ilha São Miguel</a></li>
+                <li><a href="/Bolsas/Terceira">Bolsa de Ilha Terceira</a></li>
+                <li><a href="/Bolsas/SantaMaria">Bolsa de Ilha Santa Maria</a></li>
+                <li><a href="/Bolsas/Faial">Bolsa de Ilha Faial</a></li>
+                <li><a href="/Bolsas/Pico">Bolsa de Ilha Pico</a></li>
+                <li><a href="/Bolsas/SaoJorge">Bolsa de Ilha São Jorge</a></li>
+                <li><a href="/Bolsas/Graciosa">Bolsa de Ilha Graciosa</a></li>
+                <li><a href="/Bolsas/Flores">Bolsa de Ilha Flores</a></li>
+                <li><a href="/Bolsas/Corvo">Bolsa de Ilha Corvo</a></li>
+            </ul>
+            <ul>
+                <li><a href="/minhaconta">Minha conta</a></li>
+                <li><a href="/add_user">Adicionar candidato</a></li>
+                <li><a href="/gerar_listas">Gerar listas</a></li>
+                <li><a href="/logout">Terminar sessão</a></li>
+            </ul>
+        </div>
+
+        <!-- Content Section -->
+        <div class="content">
+            <div class="container">
+                <h2>Gerar listas</h2>
+        
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Título</th>
+                            <th>Descrição</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Lista de admitidos/excluídos</td>
+                            <td>Gerar a lista de admitidos e excluídos.</td>
+                            <td>
+                                <button class="btn btn-primary" onclick="showOfertaModal()">Gerar</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        
+            <!-- Modal -->
+            <div id="ofertaModal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <span class="close" onclick="closeOfertaModal()">&times;</span>
+                    <h3>Inserir Oferta</h3>
+                    <form id="ofertaForm">
+                        <label for="oferta">Oferta:</label>
+                        <input type="text" id="oferta" name="oferta" required />
+                        <div class="modal-actions">
+                            <button type="submit" class="btn btn-primary">Gerar</button>
+                            <button type="button" class="btn btn-secondary" onclick="closeOfertaModal()">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <script>
+            function showOfertaModal() {
+                const modal = document.getElementById("ofertaModal");
+                modal.style.display = "block";
+            }
+        
+            function closeOfertaModal() {
+                const modal = document.getElementById("ofertaModal");
+                modal.style.display = "none";
+            }
+        
+            document.getElementById("ofertaForm").addEventListener("submit", async function (event) {
+                event.preventDefault();
+        
+                const ofertaValue = document.getElementById("oferta").value;
+        
+                if (!ofertaValue) {
+                    alert("Por favor, insira uma oferta.");
+                    return;
+                }
+        
+                try {
+                    // Send the oferta value to the backend
+                    const response = await fetch('/api/gerar_lista', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ oferta: ofertaValue }),
+                    });
+        
+                    if (!response.ok) {
+                        throw new Error('Erro ao gerar lista');
+                    }
+        
+                    const result = await response.json();
+                    alert(`Lista gerada com sucesso: ${result.message}`);
+        
+                    // Close the modal
+                    closeOfertaModal();
+                } catch (error) {
+                    console.error('Erro:', error);
+                    alert('Erro ao gerar lista. Tente novamente.');
+                }
+            });
+        </script>
+    
+</body>
+</html>

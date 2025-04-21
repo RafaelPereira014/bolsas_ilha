@@ -58,7 +58,8 @@ def insert_data_to_db(json_data, db_config):
                 candidato_telemovel = candidato['candidatoTelemovel']
                 candidato_aval_curricular = candidato['NotaAvCurricular']
                 candidato_prova_conhecimentos = candidato['NotaProvaConhecimentos']
-                candidato_nota_final = candidato['candidatoNotaFinal']
+                if candidato['candidatoNotaFinal'] >= 9.5:
+                    candidato_nota_final = candidato['candidatoNotaFinal']
                 deficiencia = str(candidato.get('hasDeficiencia')).lower()  # Convert to string and lowercase
                 if deficiencia == 'true':
                     candidato_deficiencia = 'sim'
