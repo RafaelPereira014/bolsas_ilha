@@ -10,7 +10,7 @@ def connect_to_database():
 def insert_data_to_db(json_data, db_config):
     try:
         connection = pymysql.connect(**db_config)
-        print(json_data)
+        print(json.dumps(json_data, indent=4))    
         try:
             with connection.cursor() as cursor:
                 # Extract main offer data
