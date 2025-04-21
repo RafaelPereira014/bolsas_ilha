@@ -45,6 +45,7 @@ def fetch_data_with_token(oferta_num):
 
         if response.status_code == 200:
             data = response.json()
+            print(data)
             insert_data_to_db(data, db_config)
             return {"status": "success", "data": data}
         else:

@@ -38,7 +38,7 @@ def insert_data_to_db(json_data, db_config):
                     INSERT INTO admitidos_excluidos (candidato_nome,candidato_nif,local_prova_nome,candidato_email,candidato_telemovel,candidato_admitido,deficiencia,oferta_num)
                     VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
                 """
-                cursor.execute(candidato_query, (candidato_nome,candidato_nif,local_prova_nome,candidato_email,candidato_telemovel,candidato_admitido,deficiencia,oferta_num))
+                cursor.execute(candidato_query, (candidato_nome,candidato_nif,local_prova_nome,candidato_email,candidato_telemovel,candidato_admitido,candidato_deficiencia,oferta_num))
                 
                 
         
