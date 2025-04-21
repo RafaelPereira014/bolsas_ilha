@@ -39,7 +39,7 @@ def fetch_data_with_token(oferta_num):
         return None
 
     try:
-        formatted_url = f"https://outsysqa.azores.gov.pt/BEPA_Services_BL/rest/BolsaIlhas/CandidatoBolsaIlhasV2?Acess_Token={token}&OfertaNumber={oferta_num}"
+        formatted_url = f"https://outsysqa.azores.gov.pt/BEPA_Services_BL/rest/BolsaIlhas/CandidatosAdmitidosExcluidos?Acess_Token={token}&OfertaNumber={oferta_num}"
         headers = {"Content-Type": "application/json"}
         response = requests.get(formatted_url, headers=headers)
         print("entrei aqui")
