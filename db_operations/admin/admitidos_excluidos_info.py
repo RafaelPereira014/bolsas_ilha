@@ -16,6 +16,7 @@ def insert_data_to_db(json_data, db_config):
                 # Extract main offer data
                 bolsa_ilha_data = json_data.get("API_Expose_BolsaIlha_AE", {})
                 oferta_num = bolsa_ilha_data.get('ofertaNum')
+                print(oferta_num)
                 data_publicacao = bolsa_ilha_data.get('DataPublicacao', '').split('T')[0]
                 data_conclusao = bolsa_ilha_data.get('DataConclusao', '').split('T')[0]
 
