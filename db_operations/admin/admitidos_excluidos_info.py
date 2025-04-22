@@ -33,7 +33,7 @@ def insert_data_to_db(json_data, db_config):
                     candidato_email = candidato.get('candidatoEmail', '')
                     candidato_telemovel = candidato.get('candidatoTelemovel', '')
                     candidato_admitido = candidato.get('WasAdmitido', False)
-                    has_deficiencia = str(candidato.get('hasDeficiencia', False)).lower()
+                    has_deficiencia = candidato.get('hasDeficiencia', False)
                     
                     # Convert deficiencia to "sim" or "não"
                     deficiencia_status = "sim" if has_deficiencia == "true" else "não"
