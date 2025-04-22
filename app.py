@@ -380,7 +380,6 @@ def gerar_lista():
     result = fetch_data_with_token(encoded_oferta)
 
     if result["status"] == "success":
-        print("entrei aqui_sucess")
 
         return jsonify({"message": "Lista gerada com sucesso", "data": result["data"]})
     else:

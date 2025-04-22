@@ -70,9 +70,7 @@ def fetch_data_with_token(token):
         # Check if the request was successful
         if response.status_code == 200:
             # Get the JSON data from the response
-            print("entrei ca dentro")
             data = response.json()
-            print(data)
             # Insert the data into the database
             insert_data_to_db(data, db_config)
         else:
@@ -93,9 +91,6 @@ def main():
         else:
             print("Could not retrieve access token. Exiting.")
         
-        # Wait for 30 minutes before the next run
-        time.sleep(1800)  
-
 
 # Check if the script is being run directly (not imported)
 if __name__ == "__main__":
