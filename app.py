@@ -377,6 +377,7 @@ def generate_csv():
 
     connection = connect_to_database()
     cursor = connection.cursor()
+    print(oferta)
 
     try:
         query = "SELECT * FROM admitidos_excluidos WHERE oferta_num = %s"
