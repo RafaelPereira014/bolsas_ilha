@@ -376,7 +376,7 @@ def generate_csv():
         return jsonify({"error": "Oferta não fornecida"}), 400
 
     connection = connect_to_database()
-    cursor = connection.cursor()
+    cursor = connection.cursor(pymysql.cursors.DictCursor)
     print(oferta)
 
     try:
