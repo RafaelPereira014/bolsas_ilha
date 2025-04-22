@@ -2,7 +2,7 @@ import requests
 from datetime import datetime, timedelta
 import os
 from config import db_config, CLIENT_ID, CLIENT_SECRET, AUTH_URL, REQUESTS_CA_BUNDLE
-from db_operations.admin.admitidos_excluidos_info import insert_data_to_db
+from db_operations.admin.lista_unica_info import insert_data_to_db
 
 access_token = None
 token_expiry = None
@@ -37,7 +37,7 @@ def fetch_data_with_token(oferta_num):
         print("Invalid token")
         return None
     try:
-        formatted_url = f"https://outsysqa.azores.gov.pt/BEPA_Services_BL/rest/BolsaIlhas/CandidatosAdmitidosExcluidos?Acess_Token={token}&OfertaNumber={oferta_num}"
+        formatted_url = f"https://outsysqa.azores.gov.pt/BEPA_Services_BL/rest/BolsaIlhas/CandidatoBolsaIlhasV2?Acess_Token={token}&OfertaNumber={oferta_num}"
         headers = {"Content-Type": "application/json"}
         response = requests.get(formatted_url, headers=headers)
         if response.status_code == 200:

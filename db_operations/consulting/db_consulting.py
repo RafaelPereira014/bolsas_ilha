@@ -525,9 +525,11 @@ def get_curr_oferta():
     try:
         # Query to get oferta_num values with data_fim in the next year
         query = """
-            SELECT oferta_num
+            SELECT oferta_num, id
             FROM oferta
             WHERE YEAR(data_fim) = YEAR(CURDATE()) + 1
+            ORDER BY oferta_num DESC, id DESC
+            LIMIT 1;
         """
         cursor.execute(query)  # Execute the query
         results = cursor.fetchall()

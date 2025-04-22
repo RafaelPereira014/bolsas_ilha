@@ -19,7 +19,7 @@ from db_operations.consulting.db_consulting import *
 from db_operations.user.db_user import *
 from db_operations.admin.admin import *
 from db_operations.admin.api_info import *
-from db_operations.admin.admitidos_excluidos_CALL import *
+from db_operations.admin import admitidos_excluidos_CALL,lista_unica_final_CALL
 
 
 app = Flask(__name__)
@@ -377,7 +377,6 @@ def generate_csv():
 
     connection = connect_to_database()
     cursor = connection.cursor(pymysql.cursors.DictCursor)
-    print(oferta)
 
     try:
         query = "SELECT * FROM admitidos_excluidos WHERE oferta_num = %s"
@@ -425,7 +424,25 @@ def gerar_lista():
 
     encoded_oferta = urllib.parse.quote(oferta_num, safe='') 
     # Call the function to fetch data
-    result = fetch_data_with_token(encoded_oferta)
+    result = admitidos_excluidos_CALL.fetch_data_with_token(encoded_oferta)
+
+    if result["status"] == "success":
+
+        return jsonify({"message": "Lista gerada com sucesso", "data": result["data"]})
+    else:
+        return jsonify({"error": "Erro ao gerar lista", "details": result.get("details", result.get("message"))}), 500
+    
+@app.route('/api/gerar_lista_unica', methods=['POST'])
+def gerar_lista_unica():
+    data = request.get_json()
+    oferta_num = data.get('oferta')
+
+    if not oferta_num:
+        return jsonify({"error": "Oferta não fornecida"}), 400
+
+    encoded_oferta = urllib.parse.quote(oferta_num, safe='') 
+    # Call the function to fetch data
+    result = lista_unica_final_CALL.fetch_data_with_token(encoded_oferta)
 
     if result["status"] == "success":
 

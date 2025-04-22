@@ -95,6 +95,28 @@
                             
                             
                         </tr>
+                        <tr>
+                            <td>Lista unica de ordenação final</td>
+                            <td>Gerar a unica de ordenação final.</td>
+                            <td>
+                                <!-- Gerar Button -->
+                                <button class="btn btn-primary" onclick="showListaModal()">Gerar</button>
+                            
+                                <!-- Modal for Generating Oferta -->
+                                <div id="ListaModal" class="modal" style="display: none;">
+                                    <div class="modal-content">
+                                        <span class="close" onclick="closeListaModal()">&times;</span>
+                                        <form id="ListaForm">
+                                            <label for="oferta">Inserir Oferta:</label>
+                                            <input type="text" id="oferta" name="oferta" required>
+                                            <!--<button type="submit">Enviar</button>-->
+                                        </form>
+                                    </div>
+                                </div>
+                            </td>
+                            
+                            
+                        </tr>
                         
                     </tbody>
                 </table>
@@ -190,6 +212,53 @@
                 // Redirect to the backend endpoint to download the CSV
                 window.location.href = `/api/generate_csv?oferta=${encodeURIComponent(selectedOferta)}`;
             }
+        </script>
+
+        <script>
+            function showListaModal() {
+                const modal = document.getElementById("ListaModal");
+                modal.style.display = "block";
+            }
+            
+            function closeListaModal() {
+                const modal = document.getElementById("ListaModal");
+                modal.style.display = "none";
+            }
+            
+            document.getElementById("ListaForm").addEventListener("submit", async function (event) {
+                event.preventDefault();
+            
+                const ofertaValue = document.getElementById("oferta").value;
+            
+                if (!ofertaValue) {
+                    alert("Por favor, insira uma oferta.");
+                    return;
+                }
+            
+                try {
+                    // Send the oferta value to the backend
+                    const response = await fetch('/api/gerar_lista_unica', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ oferta: ofertaValue }),
+                    });
+            
+                    if (!response.ok) {
+                        throw new Error('Erro ao gerar lista');
+                    }
+            
+                    const result = await response.json();
+                    alert(`Lista gerada com sucesso: ${result.message}`);
+            
+                    // Close the modal
+                    closeOfertaModal();
+                } catch (error) {
+                    console.error('Erro:', error);
+                    alert('Erro ao gerar lista. Tente novamente.');
+                }
+            });
         </script>
         
     
