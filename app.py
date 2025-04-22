@@ -378,7 +378,6 @@ def gerar_lista():
     encoded_oferta = urllib.parse.quote(oferta_num, safe='') 
     # Call the function to fetch data
     result = fetch_data_with_token(encoded_oferta)
-    print("entrei aqui_gerar")
 
     if result["status"] == "success":
         print("entrei aqui_sucess")

@@ -6,7 +6,7 @@ from db_operations.admin.admitidos_excluidos_info import insert_data_to_db
 
 access_token = None
 token_expiry = None
-os.environ["REQUESTS_CA_BUNDLE"] = REQUESTS_CA_BUNDLE
+#os.environ["REQUESTS_CA_BUNDLE"] = REQUESTS_CA_BUNDLE
 
 def get_access_token():
     global access_token, token_expiry
@@ -21,7 +21,6 @@ def get_access_token():
         if auth_response.status_code == 200:
             auth_data = auth_response.json()
             access_token = auth_data.get("Acess_Token")
-            print(access_token)
             expiry_in_seconds = auth_data.get("expires_in", 3600)
             token_expiry = datetime.now() + timedelta(seconds=expiry_in_seconds)
             return access_token

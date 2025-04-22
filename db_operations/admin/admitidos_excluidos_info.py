@@ -32,7 +32,7 @@ def insert_data_to_db(json_data, db_config):
                     local_prova_nome = candidato.get('localProvaNome', '')
                     candidato_email = candidato.get('candidatoEmail', '')
                     candidato_telemovel = candidato.get('candidatoTelemovel', '')
-                    candidato_admitido = str(candidato.get('WasAdmitido', False))
+                    candidato_admitido = candidato.get('WasAdmitido', False)
                     has_deficiencia = str(candidato.get('hasDeficiencia', False)).lower()
                     
                     # Convert deficiencia to "sim" or "não"
