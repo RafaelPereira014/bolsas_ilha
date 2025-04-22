@@ -3,7 +3,7 @@ import io
 import requests
 import pymysql
 import logging
-from flask import abort, request, redirect, url_for, flash
+from flask import Response, abort, request, redirect, url_for, flash
 from flask import Flask, flash, redirect, request, jsonify, render_template, send_from_directory, session, url_for
 from flask import request, send_file
 from flask import render_template, request, send_file
@@ -26,7 +26,7 @@ app = Flask(__name__)
 app.secret_key = 'bolsas_ilha'
 
 # Set the upload folder
-UPLOAD_FOLDER = '/Users/rafaelpereira/Desktop/projeto_Bolsas/static/ulpoads'
+UPLOAD_FOLDER = '/static/ulpoads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 ALLOWED_EXTENSIONS = {'csv'}
@@ -364,8 +364,55 @@ def mainpage():
     )
 @app.route('/gerar_listas')
 def gerar_listas():
+    ofertas_num = select_ofertas()
+    print(ofertas_num)
     
-    return render_template('gerar_listas.html')
+    return render_template('gerar_listas.html',ofertas_num=ofertas_num)
+
+@app.route('/api/generate_csv', methods=['GET'])
+def generate_csv():
+    oferta = request.args.get('oferta')
+    if not oferta:
+        return jsonify({"error": "Oferta não fornecida"}), 400
+
+    connection = connect_to_database()
+    cursor = connection.cursor()
+
+    try:
+        query = "SELECT * FROM admitidos_excluidos WHERE oferta_num = %s"
+        cursor.execute(query, (oferta,))
+        rows = cursor.fetchall()
+
+        # If no rows are found
+        if not rows:
+            return jsonify({"error": "Nenhum registo encontrado para a oferta fornecida."}), 404
+
+        # Create CSV content
+        def generate_csv_content():
+            output = []
+            # Write header row
+            headers = rows[0].keys()
+            output.append(",".join(headers) + "\n")
+            # Write data rows
+            for row in rows:
+                output.append(",".join(map(str, row.values())) + "\n")
+            return output
+
+        csv_content = generate_csv_content()
+
+        # Return CSV file as a response
+        return Response(
+            "".join(csv_content),
+            mimetype="text/csv",
+            headers={
+                "Content-Disposition": f"attachment;filename={oferta}_admitidos_excluidos.csv"
+            },
+        )
+    except pymysql.MySQLError as e:
+        return jsonify({"error": "Erro ao aceder à base de dados.", "details": str(e)}), 500
+    finally:
+        cursor.close()
+        connection.close()
 
 @app.route('/api/gerar_lista', methods=['POST'])
 def gerar_lista():
