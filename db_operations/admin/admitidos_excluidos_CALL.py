@@ -1,6 +1,5 @@
-# external_script.py
-from datetime import datetime, timedelta
 import requests
+from datetime import datetime, timedelta
 import os
 from config import db_config, CLIENT_ID, CLIENT_SECRET, AUTH_URL, REQUESTS_CA_BUNDLE
 from db_operations.admin.admitidos_excluidos_info import insert_data_to_db
@@ -22,6 +21,7 @@ def get_access_token():
         if auth_response.status_code == 200:
             auth_data = auth_response.json()
             access_token = auth_data.get("Acess_Token")
+            print(access_token)
             expiry_in_seconds = auth_data.get("expires_in", 3600)
             token_expiry = datetime.now() + timedelta(seconds=expiry_in_seconds)
             return access_token
@@ -37,7 +37,7 @@ def fetch_data_with_token(oferta_num):
     if not token:
         print("Invalid token")
         return None
-
+    print(token)
     try:
         formatted_url = f"https://outsysqa.azores.gov.pt/BEPA_Services_BL/rest/BolsaIlhas/CandidatosAdmitidosExcluidos?Acess_Token={token}&OfertaNumber={oferta_num}"
         headers = {"Content-Type": "application/json"}
