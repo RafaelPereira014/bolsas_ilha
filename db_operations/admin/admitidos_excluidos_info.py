@@ -35,8 +35,7 @@ def insert_data_to_db(json_data, db_config):
                     candidato_admitido = candidato.get('WasAdmitido', False)
                     has_deficiencia = candidato.get('hasDeficiencia', False)
                     
-                    # Convert deficiencia to "sim" or "não"
-                    deficiencia_status = "sim" if has_deficiencia == "true" else "não"
+                    
 
                     # SQL query to insert data
                     candidato_query = """
@@ -51,7 +50,7 @@ def insert_data_to_db(json_data, db_config):
                     cursor.execute(candidato_query, (
                         candidato_nome, candidato_nif, local_prova_nome, 
                         candidato_email, candidato_telemovel, candidato_admitido, 
-                        deficiencia_status, oferta_num
+                        has_deficiencia, oferta_num
                     ))
                 
                 # Commit the transaction
