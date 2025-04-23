@@ -92,8 +92,6 @@
                                 </div>
                                 <button id="download-button" class="btn btn-success" style="display: none;" onclick="downloadFile()">Descarregar</button>
                             </td>
-                            
-                            
                         </tr>
                         <tr>
                             <td>Lista unica de ordenação final</td>
@@ -113,16 +111,17 @@
                                         </form>
                                     </div>
                                 </div>
+
                                 <div class="form-group">
-                                    <label for="oferta_num">Descarregar ficheiro:</label>
-                                    <select id="oferta_num" name="oferta_num" onchange="toggleDownloadButton_lista()" required>
+                                    <label for="lista">Descarregar ficheiro:</label>
+                                    <select id="lista" name="lista" onchange="toggleDownloadButton_lista()" required>
                                         <option value="">Selecione a oferta</option>
                                         {% for oferta in ofertas_num %}
                                             <option value="{{ oferta }}">{{ oferta }}</option>
                                         {% endfor %}
                                     </select>
                                 </div>
-                                <button id="download-button" class="btn btn-success" style="display: none;" onclick="downloadFile_lista()">Descarregar</button>
+                                <button id="download-button-lista" class="btn btn-success" style="display: none;" onclick="downloadFile_lista()">Descarregar</button>
                             </td>
                         </tr>
                         
@@ -271,13 +270,13 @@
             
             
             function toggleDownloadButton_lista() {
-                const selectedOferta = document.getElementById("oferta_num").value;
-                const downloadButton = document.getElementById("download-button");
+                const selectedOferta = document.getElementById("lista").value;
+                const downloadButton = document.getElementById("download-button-lista");
                 downloadButton.style.display = selectedOferta ? "inline-block" : "none";
             }
             
             function downloadFile_lista() {
-                const selectedOferta = document.getElementById("oferta_num").value;
+                const selectedOferta = document.getElementById("lista").value;
                 if (!selectedOferta) {
                     alert("Por favor, selecione uma oferta.");
                     return;
