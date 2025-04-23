@@ -86,7 +86,7 @@ def insert_data_to_db(json_data, db_config):
                     ordem_de_preferencia = preferencia['ordemDePreferencia']
                     
                     bolsa_query = """
-                        INSERT INTO userbolsas (user_id, Bolsa_id, contrato_id)
+                        INSERT INTO userbolsas (user_id, Bolsa_id, id_vinculo)
                         VALUES (%s, %s, %s)
                     """
                     preferencia_query = """
