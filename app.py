@@ -450,7 +450,7 @@ def generate_csv_lista():
             "".join(csv_content),
             mimetype="text/csv",
             headers={
-                "Content-Disposition": f"attachment;filename={oferta}_admitidos_excluidos.csv"
+                "Content-Disposition": f"attachment;filename=lista_unica_final_{oferta}.csv"
             },
         )
     except pymysql.MySQLError as e:
