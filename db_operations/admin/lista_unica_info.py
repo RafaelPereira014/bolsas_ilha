@@ -39,17 +39,16 @@ def insert_data_to_db(json_data, db_config):
         with connection.cursor() as cursor:
             # Insert into the main table (assuming it's named `ofertas`)
             oferta_num = json_data['ofertaNum']
-            oferta_ano = 2025
             datainit=json_data['DataPublicacao']
             data_inicio = datainit.split('T')[0]
             dataend = json_data['DataConclusao']
             data_fim = dataend.split('T')[0]
             
             oferta_query = """
-                INSERT INTO oferta (oferta_num, oferta_ano, data_inicio, data_fim)
-                VALUES (%s, %s, %s, %s)
+                INSERT INTO oferta (oferta_num,data_inicio, data_fim)
+                VALUES (%s,%s, %s)
             """
-            cursor.execute(oferta_query, (oferta_num, oferta_ano, data_inicio, data_fim))
+            cursor.execute(oferta_query, (oferta_num,data_inicio, data_fim))
             for candidato in json_data['candidatos']:
                 candidato_nome = candidato['candidatoNome']
                 candidato_nif = candidato['candidatoNIF']
