@@ -127,8 +127,10 @@
                 escolaInput.value = escola;
         
                 // Build the HTML table for the message content
-                let messageContent = `<p>Prezado(a) responsável da escola <strong>${escola}</strong>,</p>`;
-                messageContent += `<p>Segue abaixo a lista de candidatos selecionados:</p>`;
+                let messageContent = `<p>Exmo(a). Sr.º(a) Presidente do Conselho Executivo da Escola <strong>${escola}</strong>,</p>`;
+                messageContent += `<p>Segue abaixo a lista do(s) candidato(s) selecionado(s) no âmbito da Oferta BEPA n.º .../...., que deu origem às reservas de recrutamento de assistentes operacionais no Sistema Educativo Regional (Bolsas de Ilha), atualmente em vigor, nos termos do n.º 4 do artigo 36.º e do artigo 42.º ambos da Resolução do Conselho do Governo n.º 186/2024, de 16 de dezembro.</p>`;
+                messageContent += `<p>Mais se informa que, nos termos do n.º 1 do artigo 40.º da referida Resolução, é competência dessa unidade orgânica proceder à notificação, preferencialmente por correio eletrónico, dos candidatos ora indicados, para que estes, no prazo de cinco dias úteis, procedam à entrega dos documentos necessários à constituição da relação jurídica de emprego público.</p>`
+                messageContent += `<p>Para efeitos de gestão da Bolsa de Ilha, mais se solicita, conforme os n.ºs 2 e 3 do artigo 40.º, que seja comunicado, com a maior brevidade e em resposta a esta comunicação, a eventual celebração do(s) contrato(s) de trabalho em funções públicas, ou a não ocupação deste(s) posto(s) de trabalho. </p>`;
                 messageContent += `<table style="border-collapse: collapse; width: 100%;">`;
                 messageContent += `
                     <thead style="background-color: #f0f0f0;">
@@ -156,7 +158,8 @@
                 });
                 
                 messageContent += `</tbody></table>`;
-                messageContent += `<p>Atenciosamente,</p>`;
+                messageContent += `<p>Com os melhores cumprimentos,</p>`
+                messageContent += `<p>A Entidade Gestora</p>`
         
                 // Populate the contenteditable div with the HTML content
                 document.getElementById('emailMessage').innerHTML = messageContent;
