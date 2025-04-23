@@ -107,15 +107,13 @@
                                     <div class="modal-content">
                                         <span class="close" onclick="closeListaModal()">&times;</span>
                                         <form id="ListaForm">
-                                            <label for="oferta">Inserir Oferta:</label>
-                                            <input type="text" id="oferta" name="oferta" required>
+                                            <label for="lista">Inserir Oferta:</label>
+                                            <input type="text" id="lista" name="oferta" required>
                                             <button type="submit">Enviar</button>
                                         </form>
                                     </div>
                                 </div>
                             </td>
-                            
-                            
                         </tr>
                         
                     </tbody>
@@ -229,8 +227,7 @@
                 event.preventDefault();
             
                 // Get the value and trim it
-                const ofertaValue = document.getElementById("oferta").value.trim();
-                console.log(ofertaValue);
+                const ofertaValue = document.getElementById("lista");
             
                 if (!ofertaValue) {
                     alert("Por favor, insira uma oferta.");
