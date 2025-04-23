@@ -226,8 +226,8 @@
             document.getElementById("ListaForm").addEventListener("submit", async function (event) {
                 event.preventDefault();
             
-                // Get the value and trim it
-                const ofertaValue = document.getElementById("lista");
+                // Get the input value and trim it
+                const ofertaValue = document.getElementById("lista").value.trim();
             
                 if (!ofertaValue) {
                     alert("Por favor, insira uma oferta.");

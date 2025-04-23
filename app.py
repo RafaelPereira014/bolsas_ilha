@@ -365,7 +365,6 @@ def mainpage():
 @app.route('/gerar_listas')
 def gerar_listas():
     ofertas_num = select_ofertas()
-    print(ofertas_num)
     
     return render_template('gerar_listas.html',ofertas_num=ofertas_num)
 
@@ -435,21 +434,25 @@ def gerar_lista():
 @app.route('/api/gerar_lista_unica', methods=['POST'])
 def gerar_lista_unica():
     data = request.get_json()
-    print(data)
+    print(data)  # Debugging line to check incoming data
     oferta_num = data.get('lista')
 
     if not oferta_num:
         return jsonify({"error": "Oferta não fornecida"}), 400
 
+    # Encode the oferta value
     encoded_oferta = urllib.parse.quote(oferta_num, safe='') 
-    # Call the function to fetch data
+
+    # Fetch data with token
     result = lista_unica_final_CALL.fetch_data_with_token(encoded_oferta)
 
-    if result["status"] == "success":
-
-        return jsonify({"message": "Lista gerada com sucesso", "data": result["data"]})
+    if result.get("status") == "success":
+        return jsonify({"message": "Lista gerada com sucesso", "data": result.get("data")})
     else:
-        return jsonify({"error": "Erro ao gerar lista", "details": result.get("details", result.get("message"))}), 500
+        return jsonify({
+            "error": "Erro ao gerar lista",
+            "details": result.get("details", result.get("message", "Erro desconhecido"))
+        }), 500
 
 @app.route('/process_csv', methods=['POST'])
 def process_csv():
