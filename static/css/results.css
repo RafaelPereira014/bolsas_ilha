@@ -109,3 +109,32 @@
 .email-form button:active {
     transform: scale(1); /* Reset scale on click */
 }
+
+.email-btn {
+    background-color: #007bff; /* Blue color for the button */
+    color: #fff; /* White text color */
+    padding: 10px 20px; /* Padding for comfortable size */
+    border: none; /* Remove default border */
+    border-radius: 5px; /* Rounded corners */
+    font-size: 14px; /* Text size */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effect */
+    margin-top: 5px;
+}
+
+.email-btn:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Slight shadow on hover */
+}
+
+.email-btn:active {
+    background-color: #004494; /* Even darker blue when clicked */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Reduce shadow when active */
+    transform: translateY(2px); /* Slightly push down when clicked */
+}
+
+.email-btn:disabled {
+    background-color: #cccccc; /* Grey color for disabled state */
+    color: #666; /* Dark grey text for disabled state */
+    cursor: not-allowed; /* Show not-allowed cursor */
+}

@@ -2,7 +2,6 @@
 Selected Candidates by School:
 Escola                         Candidato ID    Nome                           Nota       Deficiência    
 ----------------------------------------------------------------------------------------------------
-EBS NORDESTE                   1518            Guida de Fátima Simas Aguiar Dias 17.78      não            
+EBS de Santa Maria             1518            Guida de Fátima Simas Aguiar Dias 17.78      não            
 ------------------------------------------------------------------------EBS de Santa Maria             1514            Pedro Travanca                 13.04      não            
-------------------------------------------------------------------------EBS de Santa Maria             1515            Pedro Travanca                 13.04      não            
 ------------------------------------------------------------------------
