@@ -105,16 +105,17 @@
                                     <div class="modal-content">
                                         <span class="close" onclick="closeListaModal()">&times;</span>
                                         <form id="ListaForm">
-                                            <label for="lista">Inserir Oferta:</label>
-                                            <input type="text" id="lista" name="oferta" required>
+                                            <label for="listaInput">Inserir Oferta:</label>
+                                            <input type="text" id="listaInput" name="oferta" required>
                                             <button type="submit">Enviar</button>
                                         </form>
                                     </div>
                                 </div>
-
+                            
+                                <!-- Dropdown and Download Button -->
                                 <div class="form-group">
-                                    <label for="lista">Descarregar ficheiro:</label>
-                                    <select id="lista" name="lista" onchange="toggleDownloadButton_lista()" required>
+                                    <label for="listaSelect">Descarregar ficheiro:</label>
+                                    <select id="listaSelect" name="lista" onchange="toggleDownloadButton_lista()" required>
                                         <option value="">Selecione a oferta</option>
                                         {% for oferta in ofertas_num %}
                                             <option value="{{ oferta }}">{{ oferta }}</option>
@@ -236,7 +237,7 @@
                 event.preventDefault();
             
                 // Get the input value and trim it
-                const ofertaValue = document.getElementById("lista").value.trim();
+                const ofertaValue = document.getElementById("listaInput").value.trim();
             
                 if (!ofertaValue) {
                     alert("Por favor, insira uma oferta.");
@@ -268,15 +269,14 @@
                 }
             });
             
-            
             function toggleDownloadButton_lista() {
-                const selectedOferta = document.getElementById("lista").value;
+                const selectedOferta = document.getElementById("listaSelect").value;
                 const downloadButton = document.getElementById("download-button-lista");
                 downloadButton.style.display = selectedOferta ? "inline-block" : "none";
             }
             
             function downloadFile_lista() {
-                const selectedOferta = document.getElementById("lista").value;
+                const selectedOferta = document.getElementById("listaSelect").value;
                 if (!selectedOferta) {
                     alert("Por favor, selecione uma oferta.");
                     return;
