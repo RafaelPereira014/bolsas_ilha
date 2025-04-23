@@ -117,7 +117,7 @@
                                     <label for="listaSelect">Descarregar ficheiro:</label>
                                     <select id="listaSelect" name="lista" onchange="toggleDownloadButton_lista()" required>
                                         <option value="">Selecione a oferta</option>
-                                        {% for oferta in ofertas_num %}
+                                        {% for oferta in ofertas_lista %}
                                             <option value="{{ oferta }}">{{ oferta }}</option>
                                         {% endfor %}
                                     </select>
@@ -260,14 +260,23 @@
             
                     const result = await response.json();
                     alert(`Lista gerada com sucesso: ${result.message}`);
-            
-                    // Close the modal
+                    
+                    addOfertaToDropdown(ofertaValue);
                     closeListaModal();
                 } catch (error) {
                     console.error('Erro:', error);
                     alert('Erro ao gerar lista. Tente novamente.');
                 }
             });
+
+            function addOfertaToDropdown(oferta) {
+                const dropdown = document.getElementById("oferta_num");
+                const newOption = document.createElement("option");
+                newOption.value = oferta;
+                newOption.textContent = oferta;
+                dropdown.appendChild(newOption);
+            }
+
             
             function toggleDownloadButton_lista() {
                 const selectedOferta = document.getElementById("listaSelect").value;

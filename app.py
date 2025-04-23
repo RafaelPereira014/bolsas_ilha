@@ -365,8 +365,9 @@ def mainpage():
 @app.route('/gerar_listas')
 def gerar_listas():
     ofertas_num = select_ofertas()
+    ofertas_lista = select_ofertas_lista()
     
-    return render_template('gerar_listas.html',ofertas_num=ofertas_num)
+    return render_template('gerar_listas.html',ofertas_num=ofertas_num,ofertas_lista=ofertas_lista)
 
 @app.route('/api/generate_csv', methods=['GET'])
 def generate_csv():
