@@ -57,7 +57,7 @@ def fetch_data_with_token(token):
 
     try:
         # Format the URL with the token
-        formatted_url = f"https://outsysqa.azores.gov.pt/BEPA_Services_BL/rest/BolsaIlhas/CandidatoBolsaIlhasV2?Acess_Token={token}&OfertaNumber=56%2F2025"
+        formatted_url = f"https://outsysqa.azores.gov.pt/BEPA_Services_BL/rest/BolsaIlhas/CandidatoBolsaIlhasV2?Acess_Token={token}&OfertaNumber=29%2F2025"
         
         # Set the headers for the GET request
         headers = {
@@ -81,15 +81,15 @@ def fetch_data_with_token(token):
         print(f"Error while fetching data: {str(e)}")
         
 def main():
-    while True:
-        # Step 1: Get the access token (either reuse or refresh)
-        token = get_access_token()
-        if token:
-            print(f"Access Token: {token}")
-            # Step 2: Fetch data using the token
-            fetch_data_with_token(token)
-        else:
-            print("Could not retrieve access token. Exiting.")
+    #while True:
+    # Step 1: Get the access token (either reuse or refresh)
+    token = get_access_token()
+    if token:
+        print(f"Access Token: {token}")
+        # Step 2: Fetch data using the token
+        fetch_data_with_token(token)
+    else:
+        print("Could not retrieve access token. Exiting.")
         
 
 # Check if the script is being run directly (not imported)
