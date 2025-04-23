@@ -37,7 +37,6 @@ def insert_data_to_db(json_data, db_config):
     print(json.dumps(json_data, indent=4))    
     try:
         with connection.cursor() as cursor:
-            # Insert into the main table (assuming it's named `ofertas`)
             oferta_num = json_data['ofertaNum']
             datainit=json_data['DataPublicacao']
             data_inicio = datainit.split('T')[0]
