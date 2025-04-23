@@ -435,7 +435,7 @@ def gerar_lista():
 @app.route('/api/gerar_lista_unica', methods=['POST'])
 def gerar_lista_unica():
     data = request.get_json()
-    oferta_num = data.get('oferta')
+    oferta_num = data.get('lista')
 
     if not oferta_num:
         return jsonify({"error": "Oferta não fornecida"}), 400
