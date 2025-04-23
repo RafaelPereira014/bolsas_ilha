@@ -115,7 +115,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="oferta_num">Descarregar ficheiro:</label>
-                                    <select id="oferta_num" name="oferta_num" onchange="toggleDownloadButton()" required>
+                                    <select id="oferta_num" name="oferta_num" onchange="toggleDownloadButto_lista()" required>
                                         <option value="">Selecione a oferta</option>
                                         {% for oferta in ofertas_num %}
                                             <option value="{{ oferta }}">{{ oferta }}</option>
@@ -270,7 +270,7 @@
             });
             
             
-            function toggleDownloadButton() {
+            function toggleDownloadButton_lista() {
                 const selectedOferta = document.getElementById("oferta_num").value;
                 const downloadButton = document.getElementById("download-button");
                 downloadButton.style.display = selectedOferta ? "inline-block" : "none";
