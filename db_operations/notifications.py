@@ -79,7 +79,33 @@ def send_email_on_selection(sgc, recipient_emails, mensagem):
             .header {{ font-size: 18px; font-weight: bold; color: #333; }}
             .content {{ margin-top: 10px; }}
             .footer {{ margin-top: 20px; font-size: 12px; color: #666; }}
+            .table {{width: 100%;border-collapse: collapse;margin-top: 20px;}}
+            .th, td {{
+                border: 1px solid #ddd;
+                padding: 10px;
+                text-align: left;
+            }}
+
+            .th {{
+                background-color: #f2f2f2;
+                color: #333;
+                font-weight: bold;
+            }}
+
+            .tr:nth-child(even) {{
+                background-color: #f9f9f9;
+            }}
+
+            .tr:hover {{
+                background-color: #e9e9e9;
+            }}
+
+            .table-container {{
+                overflow-x: auto;
+                margin-top: 20px;
+            }}
         </style>
+    
     </head>
     <body>
         <div class="email-container">

@@ -595,7 +595,7 @@ def submit_selection():
     # Aggregate all candidates across all bolsas_ids
     for bolsa_id in bolsas_ids:
         query = """
-            SELECT u.id AS candidato_id, u.nome, u.nota_final, u.deficiencia, ue.escola_priority_id, ue.escola_id, e.nome AS escola_nome
+            SELECT u.id AS candidato_id, u.nome,u.contacto, u.nota_final, u.deficiencia, ue.escola_priority_id, ue.escola_id, e.nome AS escola_nome
             FROM users u
             JOIN userbolsas ub ON u.id = ub.user_id
             JOIN user_escola ue ON u.id = ue.user_id
@@ -662,7 +662,6 @@ def submit_selection():
             SET estado = 'a aguardar resposta', distribuicao = %s
             WHERE id = %s
             """
-            print("entrei aqui facilmente")
             execute_update(update_query, (distrib, candidato['candidato_id']))
             
             
@@ -685,7 +684,8 @@ def submit_selection():
                            date_today=date_today, 
                            contrato_tipo=contrato_tipo, 
                            total_vagas=total_vagas,
-                            curr_oferta= curr_oferta)
+                            curr_oferta= curr_oferta,
+                            distrib=distrib)
 
 @app.route('/send-email', methods=['POST'])
 def send_email_route():
@@ -693,6 +693,7 @@ def send_email_route():
     recipient = data.get('email')
     escola = data.get('escola')
     sgc = data.get('sgc')
+    print(sgc)
     message = data.get('message')
 
     if recipient and message:

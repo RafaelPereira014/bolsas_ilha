@@ -45,7 +45,7 @@
                 <p>Vagas com deficiência: {{ initial_vagas_per_escola[escola_nome].vagas_deficiencia_obrigatorias }}</p>
                 <p>Número de colocados: {{ candidatos|length }}</p>
                 <p>Tipo de contrato: {{ contrato_tipo }}</p>
-
+                <p>Distribuição: {{vagas_per_escola[escola_nome]['distribuicao']}}</p>
                 <table>
                     <thead>
                         <tr>
@@ -54,6 +54,7 @@
                             <th>Nota Final</th>
                             <th>Deficiência</th>
                             <th>Prioridade da Escola</th>
+                            <th>Contacto</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -65,6 +66,8 @@
                                     <td>{{ candidate.nota_final }}</td>
                                     <td>{{ candidate.deficiencia }}</td>
                                     <td>{{ candidate.escola_priority_id }}</td>
+                                    <td>{{ candidate.contacto }}</td>
+
                                 </tr>
                             {% endfor %}
                         {% else %}
@@ -91,10 +94,11 @@
                 <input type="hidden" id="escolaInput" name="escola" value="">
                 <label for="email">Email Destinatário:</label>
                 <input type="email" id="email" name="email" placeholder="Insira o email da escola" required>
-
+    
                 <label for="emailMessage">Mensagem:</label>
-                <textarea id="emailMessage" name="message" placeholder="Escreva a sua mensagem aqui"></textarea>
-
+                <!-- Use a contenteditable div -->
+                <div id="emailMessage" name="message" contenteditable="true" style="border: 1px solid #ccc; padding: 10px; min-height: 150px; background: #f9f9f9; overflow-y: auto;"></div>
+    
                 <button id="sendEmailBtn">Enviar Email</button>
             </div>
         </div>
@@ -114,27 +118,49 @@
     
         // Open the modal and populate the fields
         document.querySelectorAll('.email-btn').forEach(button => {
-            button.addEventListener('click', function() {
+            button.addEventListener('click', function () {
                 const escola = this.getAttribute('data-escola');
                 const candidates = JSON.parse(this.getAttribute('data-candidates'));
-    
+        
                 // Fill in the school name and hidden input
                 escolaName.textContent = escola;
                 escolaInput.value = escola;
-    
-                // Clear the previous message content
-                emailMessage.value = '';
-    
-                // Dynamically build the message content with candidates' info
-                let messageContent = `Prezado(a) responsável da escola ${escola},\n\nSegue abaixo a lista de candidatos selecionados:\n\n`;
-    
+        
+                // Build the HTML table for the message content
+                let messageContent = `<p>Prezado(a) responsável da escola <strong>${escola}</strong>,</p>`;
+                messageContent += `<p>Segue abaixo a lista de candidatos selecionados:</p>`;
+                messageContent += `<table style="border-collapse: collapse; width: 100%;">`;
+                messageContent += `
+                    <thead style="background-color: #f0f0f0;">
+                        <tr>
+                            <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Nome</th>
+                            <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Nota Final</th>
+                            <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Prioridade da Escola</th>
+                            <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Portador de Deficiência</th>
+                            <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Contacto</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                `;
+                
                 candidates.forEach(candidate => {
-                    messageContent += `ID: ${candidate.candidato_id}, Nome: ${candidate.nome}, Nota Final: ${candidate.nota_final}, Deficiência: ${candidate.deficiencia}, Prioridade da Escola: ${candidate.escola_priority_id}\n`;
+                    messageContent += `
+                        <tr style="border: 1px solid #ddd;">
+                            <td style="padding: 8px; text-align: left;">${candidate.nome}</td>
+                            <td style="padding: 8px; text-align: left;">${candidate.nota_final}</td>
+                            <td style="padding: 8px; text-align: left;">${candidate.escola_priority_id}</td>
+                            <td style="padding: 8px; text-align: left;">${candidate.deficiencia}</td>
+                            <td style="padding: 8px; text-align: left;">${candidate.contacto}</td>
+                        </tr>
+                    `;
                 });
-    
-                messageContent += `\nAtenciosamente,\n`;
-                emailMessage.value = messageContent;
-    
+                
+                messageContent += `</tbody></table>`;
+                messageContent += `<p>Atenciosamente,</p>`;
+        
+                // Populate the contenteditable div with the HTML content
+                document.getElementById('emailMessage').innerHTML = messageContent;
+        
                 // Display the modal
                 modal.style.display = 'block';
             });
@@ -154,9 +180,12 @@
     
         // Handle email sending logic
         sendEmailBtn.addEventListener('click', function() {
+            const vagasPerEscola = {{ vagas_per_escola|tojson }};
             const email = document.getElementById('email').value;
-            const message = emailMessage.value;
+            const message = emailMessage.innerHTML;
             const escola = escolaInput.value;
+            const sgc = vagasPerEscola[escola]?.distribuicao;
+
     
             if (email && message) {
                 // AJAX request to send the email
@@ -168,7 +197,8 @@
                     body: JSON.stringify({
                         email: email,
                         message: message,
-                        escola: escola
+                        escola: escola,
+                        sgc: sgc
                     })
                 })
                 .then(response => response.json())
