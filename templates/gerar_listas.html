@@ -228,8 +228,10 @@
             document.getElementById("ListaForm").addEventListener("submit", async function (event) {
                 event.preventDefault();
             
-                const ofertaValue = document.getElementById("oferta").value;
-                console.log(ofertaValue)
+                // Get the value and trim it
+                const ofertaValue = document.getElementById("oferta").value.trim();
+                console.log(ofertaValue);
+            
                 if (!ofertaValue) {
                     alert("Por favor, insira uma oferta.");
                     return;
@@ -253,7 +255,7 @@
                     alert(`Lista gerada com sucesso: ${result.message}`);
             
                     // Close the modal
-                    closeOfertaModal();
+                    closeListaModal();
                 } catch (error) {
                     console.error('Erro:', error);
                     alert('Erro ao gerar lista. Tente novamente.');
