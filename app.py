@@ -714,6 +714,7 @@ def submit_selection():
             """
             execute_update(update_query, (distrib, candidato['candidato_id']))
             
+            id_bolsa = get_bolsa_id_for_school(escola_nome)
             
             insert_query2 = """
                 INSERT INTO colocados (user_id, bolsa_id, escola_nome, contrato_id, escola_priority_id, placement_date,estado,oferta_num)
@@ -722,7 +723,7 @@ def submit_selection():
             
             
             
-            execute_insert(insert_query2, (candidato['candidato_id'], bolsa_id, candidato['escola_nome'], contrato_tipo, candidato['escola_priority_id'],curr_oferta))
+            execute_insert(insert_query2, (candidato['candidato_id'], id_bolsa, candidato['escola_nome'], contrato_tipo, candidato['escola_priority_id'],curr_oferta))
             
                   
         
