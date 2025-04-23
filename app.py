@@ -413,6 +413,51 @@ def generate_csv():
         cursor.close()
         connection.close()
 
+@app.route('/api/generate_csv_lista', methods=['GET'])
+def generate_csv_lista():
+    oferta = request.args.get('oferta')
+    if not oferta:
+        return jsonify({"error": "Oferta não fornecida"}), 400
+
+    connection = connect_to_database()
+    cursor = connection.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        query = "SELECT * FROM users WHERE oferta_num = %s"
+        cursor.execute(query, (oferta,))
+        rows = cursor.fetchall()
+
+        # If no rows are found
+        if not rows:
+            return jsonify({"error": "Nenhum registo encontrado para a oferta fornecida."}), 404
+
+        # Create CSV content
+        def generate_csv_content():
+            output = []
+            # Write header row
+            headers = rows[0].keys()
+            output.append(",".join(headers) + "\n")
+            # Write data rows
+            for row in rows:
+                output.append(",".join(map(str, row.values())) + "\n")
+            return output
+
+        csv_content = generate_csv_content()
+
+        # Return CSV file as a response
+        return Response(
+            "".join(csv_content),
+            mimetype="text/csv",
+            headers={
+                "Content-Disposition": f"attachment;filename={oferta}_admitidos_excluidos.csv"
+            },
+        )
+    except pymysql.MySQLError as e:
+        return jsonify({"error": "Erro ao aceder à base de dados.", "details": str(e)}), 500
+    finally:
+        cursor.close()
+        connection.close()
+
 @app.route('/api/gerar_lista', methods=['POST'])
 def gerar_lista():
     data = request.get_json()
