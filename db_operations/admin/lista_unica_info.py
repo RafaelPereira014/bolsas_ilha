@@ -67,13 +67,13 @@ def insert_data_to_db(json_data, db_config):
                 Estado = 'livre'
                 
                 candidato_query = """
-                    INSERT INTO users (oferta_num, nome, nif, local_prova, deficiencia,contacto, avaliacao_curricular, prova_de_conhecimentos, nota_final,estado)
-                    VALUES (%s,  %s, %s, %s, %s, %s, %s, %s, %s,%s)
+                    INSERT INTO users (oferta_num, nome, nif, local_prova, deficiencia,contacto, avaliacao_curricular, prova_de_conhecimentos, nota_final,estado,email)
+                    VALUES (%s,  %s, %s, %s, %s, %s, %s, %s, %s,%s,%s)
                 """
                 cursor.execute(candidato_query, (
                     oferta_num, candidato_nome, candidato_nif, local_prova_nome,
                     candidato_deficiencia,candidato_telemovel,
-                    candidato_aval_curricular, candidato_prova_conhecimentos, candidato_nota_final,Estado
+                    candidato_aval_curricular, candidato_prova_conhecimentos, candidato_nota_final,Estado,candidato_email
                 ))
                 candidato_id = cursor.lastrowid
                 
