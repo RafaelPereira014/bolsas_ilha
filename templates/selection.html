@@ -89,21 +89,13 @@
                 </div>
                 <div class="form-group">
                 </div>
-    
 
-                <!-- Fields to display calculated values -->
-               
-
-                
-                
-
-
-                <div class="selected-schools">
+                <div class="selected-schools" style="display: none;">
                     <h3>Vagas introduzidas</h3>
                     <table id="selectedSchoolsTable">
                         <thead>
                             <tr>
-                                <th>Unigade Orgânica</th>
+                                <th>Unidade Orgânica</th>
                                 <th>Número de vagas</th>
                                 <th>Lugares cota</th>
                                 <th>Tipo de vínculo</th>
@@ -185,6 +177,8 @@
             const vagasInputDeficiencia = document.getElementById('vagas_deficiencia').value;
             const contratoSelect = document.getElementById('contrato');
             const selectedContrato = contratoSelect.value;
+            const selectedSchoolsSection = document.querySelector('.selected-schools');
+            selectedSchoolsSection.style.display = 'block'; // Show the section
         
             if (selectedValue && vagasInput && contratoSelect.value && distribuicao) {
                 // Add selected school to the table
