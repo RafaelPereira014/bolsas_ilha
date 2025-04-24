@@ -645,7 +645,7 @@ def submit_selection():
     # Aggregate all candidates across all bolsas_ids
     for bolsa_id in bolsas_ids:
         query = """
-            SELECT u.id AS candidato_id, u.nome,u.contacto, u.nota_final, u.deficiencia, ue.escola_priority_id, ue.escola_id, e.nome AS escola_nome
+            SELECT u.id AS candidato_id, u.nome,u.contacto, u.nota_final, u.deficiencia,u.email, ue.escola_priority_id, ue.escola_id, e.nome AS escola_nome
             FROM users u
             JOIN userbolsas ub ON u.id = ub.user_id
             JOIN user_escola ue ON u.id = ue.user_id
