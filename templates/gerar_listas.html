@@ -261,7 +261,9 @@
                     const result = await response.json();
                     alert(`Lista gerada com sucesso: ${result.message}`);
                     
-                    addOfertaToDropdown(ofertaValue);
+                    location.reload();
+
+                    // Close the modal
                     closeListaModal();
                 } catch (error) {
                     console.error('Erro:', error);
@@ -270,7 +272,7 @@
             });
 
             function addOfertaToDropdown(oferta) {
-                const dropdown = document.getElementById("listaSelect");
+                const dropdown = document.getElementById("oferta_num");
                 const newOption = document.createElement("option");
                 newOption.value = oferta;
                 newOption.textContent = oferta;
