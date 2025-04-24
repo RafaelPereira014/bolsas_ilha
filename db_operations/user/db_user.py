@@ -87,7 +87,7 @@ def user_infos(user_id):
                 "local_prova": result[0][11],
                 "documentos": [],
                 "oferta_num": result[0][12],
-                "email": result[0][13],
+                "email": result[0][13]
                 
             }
 
