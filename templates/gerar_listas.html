@@ -148,6 +148,10 @@
         </div>
         
         <script>
+            document.querySelector('.toggle-button').addEventListener('click', function() {
+                const bolsasMenu = document.querySelector('.bolsas-menu');
+                bolsasMenu.style.display = bolsasMenu.style.display === 'block' ? 'none' : 'block';
+            });
             function showOfertaModal() {
                 const modal = document.getElementById("ofertaModal");
                 modal.style.display = "block";
