@@ -1,0 +1,8 @@
+
+Selected Candidates by School:
+Escola                         Candidato ID    Nome                           Nota       Deficiência    
+----------------------------------------------------------------------------------------------------
+EBI DOS BISCOITOS              1519            Diogo Areias Pacheco           17.78      não            
+------------------------------------------------------------------------EBI DOS BISCOITOS              1518            Guida de Fátima Simas Aguiar Dias 17.78      não            
+------------------------------------------------------------------------EBI DOS BISCOITOS              1511            Daniela Madeira Balsinhas de Ávila Gomes 9.65       sim            
+------------------------------------------------------------------------

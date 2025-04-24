@@ -49,7 +49,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="numero">Número de vagas:</label>
+                    <label for="numero">Número total de vagas:</label>
                     <input type="number" id="numero" name="numero" placeholder="Insira o número de candidatos" required oninput="calculateVagas()">
                 </div>
 
@@ -62,14 +62,20 @@
                         {% endfor %}
                     </select>
                 </div>
-
+                <div class="form-group">
+                    <label for="vagas_deficiencia">Número de lugares a preencher por pessoas com deficiência:</label>
+                    <input type="number" id="vagas_deficiencia" name="vagas_deficiencia" readonly>
+                </div>
                 <div class="form-group">
                     <label for="escola">Unidade Orgânica:</label>
                     <select id="escola" name="escola" required>
                         <option value="">Selecione a escola</option>
                     </select>
                 </div>
-
+                <div class="form-group">
+                    <label for="vagas_normais">Restantes vagas:</label>
+                    <input type="number" id="vagas_normais" name="vagas_normais" readonly>
+                </div>
                 <div class="form-group">
                     <label for="contrato">Tipo de vínculo:</label>
                     <select id="contrato" name="contrato_id" required>
@@ -78,22 +84,19 @@
                         <option value="2">CTFP a termo resolutivo</option>
                     </select>
                 </div>
-
-                <!-- Fields to display calculated values -->
-                <div class="form-group">
-                    <label for="vagas_normais">Vagas:</label>
-                    <input type="number" id="vagas_normais" name="vagas_normais" readonly>
-                </div>
-
-                <div class="form-group">
-                    <label for="vagas_deficiencia">Número de lugares a preencher por pessoas com deficiência:</label>
-                    <input type="number" id="vagas_deficiencia" name="vagas_deficiencia" readonly>
-                </div>
-                
-
                 <div class="form-group">
                     <button type="button" id="addSchoolBtn">Submeter vagas</button>
                 </div>
+                <div class="form-group">
+                </div>
+    
+
+                <!-- Fields to display calculated values -->
+               
+
+                
+                
+
 
                 <div class="selected-schools">
                     <h3>Vagas introduzidas</h3>

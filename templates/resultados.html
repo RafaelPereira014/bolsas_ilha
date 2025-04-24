@@ -41,9 +41,8 @@
         <div class="content">
             {% for escola_nome, candidatos in candidates_by_school.items() %}
                 <h2>Resultados da colocação {{date_today}} - {{ escola_nome }}</h2>
-                <h3>Número de vagas normais: {{ initial_vagas_per_escola[escola_nome].vagas_normais }}</h3>
                 <p>Vagas com deficiência: {{ initial_vagas_per_escola[escola_nome].vagas_deficiencia_obrigatorias }}</p>
-                <p>Número de colocados: {{ candidatos|length }}</p>
+                <p>Restantes vagas: {{ initial_vagas_per_escola[escola_nome].vagas_normais }}</p>
                 <p>Tipo de contrato: {{ contrato_tipo }}</p>
                 <p>Distribuição: {{vagas_per_escola[escola_nome]['distribuicao']}}</p>
                 <table>
