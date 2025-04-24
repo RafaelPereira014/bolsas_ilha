@@ -69,7 +69,7 @@ def send_email(to_emails, subject, message, attachments=[]):
         print(f"Failed to send email: {e}")
         
 def send_email_on_selection(sgc, recipient_emails, mensagem):
-    subject = f"Proposta de colocação com base no SGC - {sgc}."
+    subject = f"Proposta de colocação."
     message = f"""
     <html>
     <head>
@@ -79,7 +79,7 @@ def send_email_on_selection(sgc, recipient_emails, mensagem):
             .header {{ font-size: 18px; font-weight: bold; color: #333; }}
             .content {{ margin-top: 10px; }}
             .footer {{ margin-top: 20px; font-size: 12px; color: #666; }}
-            .table {{width: 100%;border-collapse: collapse;margin-top: 20px;}}
+            .table {{width: 80%;border-collapse: collapse;}}
             .th, td {{
                 border: 1px solid #ddd;
                 padding: 10px;
