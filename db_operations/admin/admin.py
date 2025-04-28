@@ -45,3 +45,23 @@ def select_ofertas_lista():
     finally:
         cursor.close()
         connection.close()
+        
+
+def get_admins():
+    connection = connect_to_database()
+    cursor = connection.cursor(pymysql.cursors.DictCursor)  # Use DictCursor to return dictionaries
+    try:
+        query = """
+        SELECT id, username, email, updated_at FROM Admin
+        """
+        cursor.execute(query)
+        results = cursor.fetchall()
+
+        # Return the list of admin details directly
+        return results
+    except pymysql.MySQLError as e:
+        print(f"Error while executing query: {e}")
+        return []  # Return an empty list if an error occurs
+    finally:
+        cursor.close()
+        connection.close()

@@ -21,9 +21,9 @@ def send_email(to_emails, subject, message, attachments=[]):
         # SMTP server configuration
         smtp_server = 'pegasus.azores.gov.pt'
         smtp_port = 587
-        user = 's0204bolsasilhaapp'
-        password = 'oUrR9xhPtEmFi9Cs'
-        from_email = 'noreply@azores.gov.pt'
+        user = 'APP-BOLSAS-ILHA'
+        password = '#nV1s3np#%tH3tJ%8+dIV+Kj'
+        from_email = 'APP.BOLSAS.ILHA@azores.gov.pt'
 
         # Create a secure SSL context
         with smtplib.SMTP(smtp_server, smtp_port) as server:

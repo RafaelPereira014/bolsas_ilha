@@ -362,6 +362,14 @@ def mainpage():
         vagas=vagas,
         curr_oferta=curr_oferta
     )
+
+@app.route('/gerir_utilizadores')
+def gerir_users():
+    
+    utilizadores = get_admins()
+    print(utilizadores)
+    
+    return render_template('utilizadores.html')
 @app.route('/gerar_listas')
 def gerar_listas():
     ofertas_num = select_ofertas()
