@@ -1072,24 +1072,21 @@ def bolsa_terceira():
         'has_next': page < total_pages
     }
 
-    if request.args.get('download_xlsx') == 'true':
-        # Generate XLSX file
-        wb = Workbook()
-        ws = wb.active
-        ws.title = "Bolsa Terceira"
+    if request.args.get('download_csv') == 'true':
+        # Create a BytesIO stream for the CSV file
+        csv_io = io.StringIO()
+        csv_writer = csv.writer(csv_io)
 
         # Write headers
-        headers = ["Nome",  "Prova de Conhecimentos","Avaliação Curricular", "Nota Final", "Escolas e Prioridades"]
-        ws.append(headers)
+        headers = ["Nome", "Prova de Conhecimentos", "Avaliação Curricular", "Nota Final", "Escolas e Prioridades", "Contrato ID"]
+        csv_writer.writerow(headers)
 
         # Write user data
-        # Write user data
         for user in user_info_sorted:
-        # Fetch escolas and contrato_id for the current user
+            # Fetch escolas and contrato_id for the current user
             user_escolas = [
                 escola for escola in escolas_bolsa if escola['user_id'] == user['id']
             ]
-            
             
             # Generate a text summary of the schools
             escolas_text = ", ".join(
@@ -1105,9 +1102,7 @@ def bolsa_terceira():
                     escola['contrato_id'] for escola in user_escolas if escola['contrato_id'] is not None
                 )
             )
-            # Debugging: Print contrato_ids to ensure correctness
-            #print(f"Contrato IDs for user {user['id']}: {contrato_ids}")
-
+            
             # Append user data to the row
             row = [
                 user['nome'],
@@ -1117,19 +1112,17 @@ def bolsa_terceira():
                 escolas_text,
                 contrato_ids,  # Add contrato_id to the row
             ]
-            ws.append(row)
+            csv_writer.writerow(row)
 
-        # Save the workbook to a BytesIO stream
-        xlsx_io = io.BytesIO()
-        wb.save(xlsx_io)
-        xlsx_io.seek(0)
+        # Move the stream's position to the beginning
+        csv_io.seek(0)
 
-        # Send XLSX as a response
+        # Send CSV as a response
         return send_file(
-            xlsx_io,
-            mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            io.BytesIO(csv_io.getvalue().encode('utf-8')),
+            mimetype='text/csv',
             as_attachment=True,
-            download_name='bolsa_terceira.xlsx'
+            download_name='bolsa_terceira.csv'
         )
 
     return render_template('/Bolsas/Terceira.html', user_info=paginated_user_info, escolas_bolsa=escolas_bolsa, pagination=pagination, uploaded_documents=uploaded_documents)
@@ -1172,19 +1165,18 @@ def bolsa_santa_maria():
         'has_next': page < total_pages
     }
 
-    if request.args.get('download_xlsx') == 'true':
-        # Generate XLSX file
-        wb = Workbook()
-        ws = wb.active
-        ws.title = "Bolsa Santa Maria"
+    if request.args.get('download_csv') == 'true':
+        # Create a BytesIO stream for the CSV file
+        csv_io = io.StringIO()
+        csv_writer = csv.writer(csv_io)
 
         # Write headers
-        headers = ["Nome",  "Prova de Conhecimentos","Avaliação Curricular", "Nota Final", "Escolas e Prioridades"]
-        ws.append(headers)
+        headers = ["Nome", "Prova de Conhecimentos", "Avaliação Curricular", "Nota Final", "Escolas e Prioridades", "Contrato ID"]
+        csv_writer.writerow(headers)
 
         # Write user data
         for user in user_info_sorted:
-        # Fetch escolas and contrato_id for the current user
+            # Fetch escolas and contrato_id for the current user
             user_escolas = [
                 escola for escola in escolas_bolsa if escola['user_id'] == user['id']
             ]
@@ -1203,9 +1195,7 @@ def bolsa_santa_maria():
                     escola['contrato_id'] for escola in user_escolas if escola['contrato_id'] is not None
                 )
             )
-            # Debugging: Print contrato_ids to ensure correctness
-            #print(f"Contrato IDs for user {user['id']}: {contrato_ids}")
-
+            
             # Append user data to the row
             row = [
                 user['nome'],
@@ -1215,19 +1205,17 @@ def bolsa_santa_maria():
                 escolas_text,
                 contrato_ids,  # Add contrato_id to the row
             ]
-            ws.append(row)
+            csv_writer.writerow(row)
 
-        # Save the workbook to a BytesIO stream
-        xlsx_io = io.BytesIO()
-        wb.save(xlsx_io)
-        xlsx_io.seek(0)
+        # Move the stream's position to the beginning
+        csv_io.seek(0)
 
-        # Send XLSX as a response
+        # Send CSV as a response
         return send_file(
-            xlsx_io,
-            mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            io.BytesIO(csv_io.getvalue().encode('utf-8')),
+            mimetype='text/csv',
             as_attachment=True,
-            download_name='bolsa_santamaria.xlsx'
+            download_name='bolsa_santamaria.csv'
         )
 
     return render_template('/Bolsas/SantaMaria.html', user_info=paginated_user_info, escolas_bolsa=escolas_bolsa, pagination=pagination, uploaded_documents=uploaded_documents)
@@ -1269,19 +1257,18 @@ def bolsa_faial():
         'has_next': page < total_pages
     }
 
-    if request.args.get('download_xlsx') == 'true':
-        # Generate XLSX file
-        wb = Workbook()
-        ws = wb.active
-        ws.title = "Bolsa Faial"
+    if request.args.get('download_csv') == 'true':
+        # Create a BytesIO stream for the CSV file
+        csv_io = io.StringIO()
+        csv_writer = csv.writer(csv_io)
 
         # Write headers
-        headers = ["Nome",  "Prova de Conhecimentos","Avaliação Curricular", "Nota Final", "Escolas e Prioridades"]
-        ws.append(headers)
+        headers = ["Nome", "Prova de Conhecimentos", "Avaliação Curricular", "Nota Final", "Escolas e Prioridades", "Contrato ID"]
+        csv_writer.writerow(headers)
 
         # Write user data
         for user in user_info_sorted:
-        # Fetch escolas and contrato_id for the current user
+            # Fetch escolas and contrato_id for the current user
             user_escolas = [
                 escola for escola in escolas_bolsa if escola['user_id'] == user['id']
             ]
@@ -1300,9 +1287,7 @@ def bolsa_faial():
                     escola['contrato_id'] for escola in user_escolas if escola['contrato_id'] is not None
                 )
             )
-            # Debugging: Print contrato_ids to ensure correctness
-            #print(f"Contrato IDs for user {user['id']}: {contrato_ids}")
-
+            
             # Append user data to the row
             row = [
                 user['nome'],
@@ -1312,19 +1297,17 @@ def bolsa_faial():
                 escolas_text,
                 contrato_ids,  # Add contrato_id to the row
             ]
-            ws.append(row)
+            csv_writer.writerow(row)
 
-        # Save the workbook to a BytesIO stream
-        xlsx_io = io.BytesIO()
-        wb.save(xlsx_io)
-        xlsx_io.seek(0)
+        # Move the stream's position to the beginning
+        csv_io.seek(0)
 
-        # Send XLSX as a response
+        # Send CSV as a response
         return send_file(
-            xlsx_io,
-            mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            io.BytesIO(csv_io.getvalue().encode('utf-8')),
+            mimetype='text/csv',
             as_attachment=True,
-            download_name='bolsa_faial.xlsx'
+            download_name='bolsa_faial.csv'
         )
 
     return render_template('/Bolsas/Faial.html', user_info=paginated_user_info, escolas_bolsa=escolas_bolsa, pagination=pagination, uploaded_documents=uploaded_documents)
@@ -1366,19 +1349,18 @@ def bolsa_pico():
         'has_next': page < total_pages
     }
 
-    if request.args.get('download_xlsx') == 'true':
-        # Generate XLSX file
-        wb = Workbook()
-        ws = wb.active
-        ws.title = "Bolsa Pico"
+    if request.args.get('download_csv') == 'true':
+        # Create a BytesIO stream for the CSV file
+        csv_io = io.StringIO()
+        csv_writer = csv.writer(csv_io)
 
         # Write headers
-        headers = ["Nome",  "Prova de Conhecimentos","Avaliação Curricular", "Nota Final", "Escolas e Prioridades"]
-        ws.append(headers)
+        headers = ["Nome", "Prova de Conhecimentos", "Avaliação Curricular", "Nota Final", "Escolas e Prioridades", "Contrato ID"]
+        csv_writer.writerow(headers)
 
         # Write user data
         for user in user_info_sorted:
-        # Fetch escolas and contrato_id for the current user
+            # Fetch escolas and contrato_id for the current user
             user_escolas = [
                 escola for escola in escolas_bolsa if escola['user_id'] == user['id']
             ]
@@ -1397,9 +1379,7 @@ def bolsa_pico():
                     escola['contrato_id'] for escola in user_escolas if escola['contrato_id'] is not None
                 )
             )
-            # Debugging: Print contrato_ids to ensure correctness
-            #print(f"Contrato IDs for user {user['id']}: {contrato_ids}")
-
+            
             # Append user data to the row
             row = [
                 user['nome'],
@@ -1409,19 +1389,17 @@ def bolsa_pico():
                 escolas_text,
                 contrato_ids,  # Add contrato_id to the row
             ]
-            ws.append(row)
+            csv_writer.writerow(row)
 
-        # Save the workbook to a BytesIO stream
-        xlsx_io = io.BytesIO()
-        wb.save(xlsx_io)
-        xlsx_io.seek(0)
+        # Move the stream's position to the beginning
+        csv_io.seek(0)
 
-        # Send XLSX as a response
+        # Send CSV as a response
         return send_file(
-            xlsx_io,
-            mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            io.BytesIO(csv_io.getvalue().encode('utf-8')),
+            mimetype='text/csv',
             as_attachment=True,
-            download_name='bolsa_pico.xlsx'
+            download_name='bolsa_pico.csv'
         )
 
     return render_template('/Bolsas/Pico.html', user_info=paginated_user_info, escolas_bolsa=escolas_bolsa, pagination=pagination, uploaded_documents=uploaded_documents)
@@ -1463,19 +1441,18 @@ def bolsa_sao_jorge():
         'has_next': page < total_pages
     }
 
-    if request.args.get('download_xlsx') == 'true':
-        # Generate XLSX file
-        wb = Workbook()
-        ws = wb.active
-        ws.title = "Bolsa São Jorge"
+    if request.args.get('download_csv') == 'true':
+        # Create a BytesIO stream for the CSV file
+        csv_io = io.StringIO()
+        csv_writer = csv.writer(csv_io)
 
         # Write headers
-        headers = ["Nome",  "Prova de Conhecimentos","Avaliação Curricular", "Nota Final", "Escolas e Prioridades"]
-        ws.append(headers)
+        headers = ["Nome", "Prova de Conhecimentos", "Avaliação Curricular", "Nota Final", "Escolas e Prioridades", "Contrato ID"]
+        csv_writer.writerow(headers)
 
         # Write user data
         for user in user_info_sorted:
-        # Fetch escolas and contrato_id for the current user
+            # Fetch escolas and contrato_id for the current user
             user_escolas = [
                 escola for escola in escolas_bolsa if escola['user_id'] == user['id']
             ]
@@ -1494,9 +1471,7 @@ def bolsa_sao_jorge():
                     escola['contrato_id'] for escola in user_escolas if escola['contrato_id'] is not None
                 )
             )
-            # Debugging: Print contrato_ids to ensure correctness
-            #print(f"Contrato IDs for user {user['id']}: {contrato_ids}")
-
+            
             # Append user data to the row
             row = [
                 user['nome'],
@@ -1506,19 +1481,17 @@ def bolsa_sao_jorge():
                 escolas_text,
                 contrato_ids,  # Add contrato_id to the row
             ]
-            ws.append(row)
+            csv_writer.writerow(row)
 
-        # Save the workbook to a BytesIO stream
-        xlsx_io = io.BytesIO()
-        wb.save(xlsx_io)
-        xlsx_io.seek(0)
+        # Move the stream's position to the beginning
+        csv_io.seek(0)
 
-        # Send XLSX as a response
+        # Send CSV as a response
         return send_file(
-            xlsx_io,
-            mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            io.BytesIO(csv_io.getvalue().encode('utf-8')),
+            mimetype='text/csv',
             as_attachment=True,
-            download_name='bolsa_sjorge.xlsx'
+            download_name='bolsa_sjorge.csv'
         )
 
     return render_template('/Bolsas/SaoJorge.html', user_info=paginated_user_info, escolas_bolsa=escolas_bolsa, pagination=pagination, uploaded_documents=uploaded_documents)
@@ -1560,19 +1533,18 @@ def bolsa_graciosa():
         'has_next': page < total_pages
     }
 
-    if request.args.get('download_xlsx') == 'true':
-        # Generate XLSX file
-        wb = Workbook()
-        ws = wb.active
-        ws.title = "Bolsa Graciosa"
+    if request.args.get('download_csv') == 'true':
+        # Create a BytesIO stream for the CSV file
+        csv_io = io.StringIO()
+        csv_writer = csv.writer(csv_io)
 
         # Write headers
-        headers = ["Nome",  "Prova de Conhecimentos","Avaliação Curricular", "Nota Final", "Escolas e Prioridades"]
-        ws.append(headers)
+        headers = ["Nome", "Prova de Conhecimentos", "Avaliação Curricular", "Nota Final", "Escolas e Prioridades", "Contrato ID"]
+        csv_writer.writerow(headers)
 
         # Write user data
         for user in user_info_sorted:
-        # Fetch escolas and contrato_id for the current user
+            # Fetch escolas and contrato_id for the current user
             user_escolas = [
                 escola for escola in escolas_bolsa if escola['user_id'] == user['id']
             ]
@@ -1591,9 +1563,7 @@ def bolsa_graciosa():
                     escola['contrato_id'] for escola in user_escolas if escola['contrato_id'] is not None
                 )
             )
-            # Debugging: Print contrato_ids to ensure correctness
-            #print(f"Contrato IDs for user {user['id']}: {contrato_ids}")
-
+            
             # Append user data to the row
             row = [
                 user['nome'],
@@ -1603,19 +1573,17 @@ def bolsa_graciosa():
                 escolas_text,
                 contrato_ids,  # Add contrato_id to the row
             ]
-            ws.append(row)
+            csv_writer.writerow(row)
 
-        # Save the workbook to a BytesIO stream
-        xlsx_io = io.BytesIO()
-        wb.save(xlsx_io)
-        xlsx_io.seek(0)
+        # Move the stream's position to the beginning
+        csv_io.seek(0)
 
-        # Send XLSX as a response
+        # Send CSV as a response
         return send_file(
-            xlsx_io,
-            mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            io.BytesIO(csv_io.getvalue().encode('utf-8')),
+            mimetype='text/csv',
             as_attachment=True,
-            download_name='bolsa_graciosa.xlsx'
+            download_name='bolsa_graciosa.csv'
         )
     return render_template('/Bolsas/Graciosa.html', user_info=paginated_user_info, escolas_bolsa=escolas_bolsa, pagination=pagination, uploaded_documents=uploaded_documents)
 
@@ -1656,19 +1624,18 @@ def bolsa_flores():
         'has_next': page < total_pages
     }
 
-    if request.args.get('download_xlsx') == 'true':
-        # Generate XLSX file
-        wb = Workbook()
-        ws = wb.active
-        ws.title = "Bolsa Flores"
+    if request.args.get('download_csv') == 'true':
+        # Create a BytesIO stream for the CSV file
+        csv_io = io.StringIO()
+        csv_writer = csv.writer(csv_io)
 
         # Write headers
-        headers = ["Nome",  "Prova de Conhecimentos","Avaliação Curricular", "Nota Final", "Escolas e Prioridades"]
-        ws.append(headers)
+        headers = ["Nome", "Prova de Conhecimentos", "Avaliação Curricular", "Nota Final", "Escolas e Prioridades", "Contrato ID"]
+        csv_writer.writerow(headers)
 
         # Write user data
         for user in user_info_sorted:
-        # Fetch escolas and contrato_id for the current user
+            # Fetch escolas and contrato_id for the current user
             user_escolas = [
                 escola for escola in escolas_bolsa if escola['user_id'] == user['id']
             ]
@@ -1687,9 +1654,7 @@ def bolsa_flores():
                     escola['contrato_id'] for escola in user_escolas if escola['contrato_id'] is not None
                 )
             )
-            # Debugging: Print contrato_ids to ensure correctness
-            #print(f"Contrato IDs for user {user['id']}: {contrato_ids}")
-
+            
             # Append user data to the row
             row = [
                 user['nome'],
@@ -1699,19 +1664,17 @@ def bolsa_flores():
                 escolas_text,
                 contrato_ids,  # Add contrato_id to the row
             ]
-            ws.append(row)
+            csv_writer.writerow(row)
 
-        # Save the workbook to a BytesIO stream
-        xlsx_io = io.BytesIO()
-        wb.save(xlsx_io)
-        xlsx_io.seek(0)
+        # Move the stream's position to the beginning
+        csv_io.seek(0)
 
-        # Send XLSX as a response
+        # Send CSV as a response
         return send_file(
-            xlsx_io,
-            mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            io.BytesIO(csv_io.getvalue().encode('utf-8')),
+            mimetype='text/csv',
             as_attachment=True,
-            download_name='bolsa_flores.xlsx'
+            download_name='bolsa_flores.csv'
         )
 
     return render_template('/Bolsas/Flores.html', user_info=paginated_user_info, escolas_bolsa=escolas_bolsa, pagination=pagination, uploaded_documents=uploaded_documents)
@@ -1753,23 +1716,21 @@ def bolsa_corvo():
         'has_next': page < total_pages
     }
 
-    if request.args.get('download_xlsx') == 'true':
-        # Generate XLSX file
-        wb = Workbook()
-        ws = wb.active
-        ws.title = "Bolsa Corvo"
+    if request.args.get('download_csv') == 'true':
+        # Create a BytesIO stream for the CSV file
+        csv_io = io.StringIO()
+        csv_writer = csv.writer(csv_io)
 
         # Write headers
-        headers = ["Nome",  "Prova de Conhecimentos","Avaliação Curricular", "Nota Final", "Escolas e Prioridades"]
-        ws.append(headers)
+        headers = ["Nome", "Prova de Conhecimentos", "Avaliação Curricular", "Nota Final", "Escolas e Prioridades", "Contrato ID"]
+        csv_writer.writerow(headers)
 
         # Write user data
         for user in user_info_sorted:
-        # Fetch escolas and contrato_id for the current user
+            # Fetch escolas and contrato_id for the current user
             user_escolas = [
                 escola for escola in escolas_bolsa if escola['user_id'] == user['id']
             ]
-            print(user_escolas)
             
             # Generate a text summary of the schools
             escolas_text = ", ".join(
@@ -1785,9 +1746,7 @@ def bolsa_corvo():
                     escola['contrato_id'] for escola in user_escolas if escola['contrato_id'] is not None
                 )
             )
-            # Debugging: Print contrato_ids to ensure correctness
-            #print(f"Contrato IDs for user {user['id']}: {contrato_ids}")
-
+            
             # Append user data to the row
             row = [
                 user['nome'],
@@ -1797,19 +1756,17 @@ def bolsa_corvo():
                 escolas_text,
                 contrato_ids,  # Add contrato_id to the row
             ]
-            ws.append(row)
+            csv_writer.writerow(row)
 
-        # Save the workbook to a BytesIO stream
-        xlsx_io = io.BytesIO()
-        wb.save(xlsx_io)
-        xlsx_io.seek(0)
+        # Move the stream's position to the beginning
+        csv_io.seek(0)
 
-        # Send XLSX as a response
+        # Send CSV as a response
         return send_file(
-            xlsx_io,
-            mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            io.BytesIO(csv_io.getvalue().encode('utf-8')),
+            mimetype='text/csv',
             as_attachment=True,
-            download_name='bolsa_corvo.xlsx'
+            download_name='bolsa_corvo.csv'
         )
 
     return render_template('/Bolsas/Corvo.html', user_info=paginated_user_info, escolas_bolsa=escolas_bolsa, pagination=pagination, uploaded_documents=uploaded_documents)
