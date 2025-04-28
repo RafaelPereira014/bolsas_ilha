@@ -978,19 +978,18 @@ def bolsa_sao_miguel():
         'has_next': page < total_pages
     }
 
-    if request.args.get('download_xlsx') == 'true':
-        # Generate XLSX file
-        wb = Workbook()
-        ws = wb.active
-        ws.title = "Bolsa São Miguel"
+    if request.args.get('download_csv') == 'true':
+        # Create a BytesIO stream for the CSV file
+        csv_io = io.StringIO()
+        csv_writer = csv.writer(csv_io)
 
         # Write headers
         headers = ["Nome", "Prova de Conhecimentos", "Avaliação Curricular", "Nota Final", "Escolas e Prioridades", "Contrato ID"]
-        ws.append(headers)
+        csv_writer.writerow(headers)
 
         # Write user data
         for user in user_info_sorted:
-        # Fetch escolas and contrato_id for the current user
+            # Fetch escolas and contrato_id for the current user
             user_escolas = [
                 escola for escola in escolas_bolsa if escola['user_id'] == user['id']
             ]
@@ -1009,9 +1008,7 @@ def bolsa_sao_miguel():
                     escola['contrato_id'] for escola in user_escolas if escola['contrato_id'] is not None
                 )
             )
-            # Debugging: Print contrato_ids to ensure correctness
-            #print(f"Contrato IDs for user {user['id']}: {contrato_ids}")
-
+            
             # Append user data to the row
             row = [
                 user['nome'],
@@ -1021,19 +1018,17 @@ def bolsa_sao_miguel():
                 escolas_text,
                 contrato_ids,  # Add contrato_id to the row
             ]
-            ws.append(row)
+            csv_writer.writerow(row)
 
-        # Save the workbook to a BytesIO stream
-        xlsx_io = io.BytesIO()
-        wb.save(xlsx_io)
-        xlsx_io.seek(0)
+        # Move the stream's position to the beginning
+        csv_io.seek(0)
 
-        # Send XLSX as a response
+        # Send CSV as a response
         return send_file(
-            xlsx_io,
-            mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            io.BytesIO(csv_io.getvalue().encode('utf-8')),
+            mimetype='text/csv',
             as_attachment=True,
-            download_name='bolsa_saomiguel.xlsx'
+            download_name='bolsa_saomiguel.csv'
         )
 
     return render_template('/Bolsas/SaoMiguel.html', user_info=paginated_user_info, pagination=pagination, uploaded_documents=uploaded_documents)
