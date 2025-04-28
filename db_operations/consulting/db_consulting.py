@@ -133,6 +133,7 @@ def get_escolas_by_bolsa(user_id, bolsa_id):
           AND be.bolsa_id = %s 
           AND ub.Bolsa_id = be.bolsa_id  -- Ensure the bolsa_id matches
           AND ub.contrato_id = ub.contrato_id  -- Ensure the contrato_id matches for the bolsa_id
+        ORDER BY ue.escola_priority_id ASC  -- Order by escola_priority_id in ascending order
         """
 
         # Execute the query with user_id and bolsa_id as parameters

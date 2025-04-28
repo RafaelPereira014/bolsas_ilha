@@ -773,8 +773,6 @@ def metadatapage():
 @app.route('/view_escolas/<int:user_id>/<int:bolsa_id>')
 def fetch_escolas(user_id, bolsa_id):
     escolas = get_escolas_by_bolsa(user_id, bolsa_id)
-    print(escolas)
-    # print("Fetched escolas:", escolas)  # This should show the fetched results
     return jsonify(escolas)  # Return JSON response
 
 @app.route('/view_escolas/<int:user_id>')
@@ -1048,7 +1046,7 @@ def bolsa_terceira():
     # Fetch all user info and sort by final grade before pagination
     user_info = get_user_info(43,user_ids)
     user_info_sorted = sorted(user_info, key=lambda x: x['nota_final'], reverse=True)
-    print(user_info_sorted)
+    
 
     # Paginate the sorted user info
     total_users = len(user_info_sorted)
