@@ -2,3 +2,6 @@
 Selected Candidates by School:
 Escola                         Candidato ID    Nome                           Nota       Deficiência    
 ----------------------------------------------------------------------------------------------------
+ES JERÓNIMO EMILIANO ANDRADE   1513            Rui Branco                     14.30      não            
+------------------------------------------------------------------------ES JERÓNIMO EMILIANO ANDRADE   1520            Rui Miguel Mendes Espínola     13.71      não            
+------------------------------------------------------------------------

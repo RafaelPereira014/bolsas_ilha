@@ -19,7 +19,7 @@ def connect_to_database():
 def send_email(to_emails, subject, message, attachments=[]):
     try:
         # SMTP server configuration
-        smtp_server = 'pegasus.azores.gov.pt'
+        smtp_server = 'smtp.azores.gov.pt'
         smtp_port = 587
         user = 'APP-BOLSAS-ILHA'
         password = '#nV1s3np#%tH3tJ%8+dIV+Kj'
