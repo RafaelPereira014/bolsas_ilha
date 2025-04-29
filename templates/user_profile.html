@@ -98,7 +98,7 @@
                     {%endif%}
                 </table>
             </div>
-            
+            <hr>
             <div class="grades-section">
                 <h3>Notas e Avaliações</h3>
                 <table>
@@ -124,44 +124,48 @@
                 </table>
             </div>
 
+            <hr>
+
             
 
             
-                <div class="current-bolsa-section">
-                    <h3>Bolsa Atual</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Estado</th>
-                                <th>Bolsa</th>
-                                <th>Escola</th>
-                                <th>Tipo contrato</th>
-                                <th>Prioridade</th>
-                                <th>Data</th>
-                                <th>Alterado por</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% if colocados %}
-                                {% for colocado in colocados %}
-                                    <tr>
-                                        <td>{{ colocado.estado}}</td>
-                                        <td>{{ colocado.bolsa_nome }}</td>
-                                        <td>{{ colocado.escola_nome }}</td>
-                                        <td>{{ colocado.tipo_contrato }}</td>
-                                        <td>{{ colocado.escola_priority_id }}</td>
-                                        <td>{{ colocado.placement_date }}</td>
-                                        <td>{{ colocado.alterado_por if colocado.alterado_por else '-' }}</td>
-                                    </tr>
-                                {% endfor %}
-                            {% else %}
+            <div class="current-bolsa-section">
+                <h3>Bolsa Atual</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Estado</th>
+                            <th>Bolsa</th>
+                            <th>Escola</th>
+                            <th>Tipo contrato</th>
+                            <th>Prioridade</th>
+                            <th>Data</th>
+                            <th>Alterado por</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if colocados %}
+                            {% for colocado in colocados %}
                                 <tr>
-                                    <td colspan="6">Não existem dados disponiveis sobre este utilizador.</td>
+                                    <td>{{ colocado.estado}}</td>
+                                    <td>{{ colocado.bolsa_nome }}</td>
+                                    <td>{{ colocado.escola_nome }}</td>
+                                    <td>{{ colocado.tipo_contrato }}</td>
+                                    <td>{{ colocado.escola_priority_id }}</td>
+                                    <td>{{ colocado.placement_date }}</td>
+                                    <td>{{ colocado.alterado_por if colocado.alterado_por else '-' }}</td>
                                 </tr>
-                            {% endif %}
-                        </tbody>
-                    </table>
-                </div>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="6">Não existem dados disponiveis sobre este utilizador.</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+
+            <hr>
 
             <div class="documents-section">
                 <h3>Documentos Importantes</h3>
@@ -192,6 +196,7 @@
                     </tbody>
                 </table>
             </div>
+            <hr>
 
             <form method="POST" action="{{ url_for('user_profile', user_id=user_info['id']) }}">
                 <div class="additional-info">
