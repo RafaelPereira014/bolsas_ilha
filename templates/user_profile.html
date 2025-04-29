@@ -184,7 +184,7 @@
                         {% for doc in user_info.documentos %}
                         <tr>
                             <td>
-                                <a href="{{ url_for('static', filename='/static/uploads/' + doc.file_name) }}" download>{{ doc.file_name }}</a>
+                                <a href="{{ url_for('static', filename='/uploads/' + doc.file_name) }}" download>{{ doc.file_name }}</a>
                             </td>
                             <td>
                                 <form method="POST" action="/remove_document/{{ user_info.id }}/{{ doc.file_name }}">
