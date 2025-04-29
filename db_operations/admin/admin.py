@@ -65,3 +65,18 @@ def get_admins():
     finally:
         cursor.close()
         connection.close()
+        
+def add_admins(username,password,email):
+    connection = connect_to_database()
+    cursor = connection.cursor()
+    try:
+        query= """
+        INSERT INTO Admin(username,password,email) VALUES(%s,%s,%s)
+        """
+        cursor.execute(query(username,password,email))
+        
+    except pymysql.MySQLError as e :
+        return []
+    finally:
+        cursor.close()
+        connection.close()

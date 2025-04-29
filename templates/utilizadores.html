@@ -4,23 +4,138 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/consulta.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='images/GBI.png') }}" type="image/png">
-    <title>Gerir utilizadores</title>
-
-
+    <title>Gerir Utilizadores</title>
     <style>
-        
+        /* General Table Styling */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        font-size: 16px;
+        text-align: left;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    table th, table td {
+        border: 1px solid #ddd;
+        padding: 12px 15px;
+    }
+
+    table th {
+        background-color: #007bff;
+        color: white;
+        font-weight: bold;
+    }
+
+    table tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    table tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    /* Button Styling */
+    .actions button,
+    button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .actions button:hover,
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    button:disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
+    }
+
+    /* Modal Styling */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        padding: 20px;
+        width: 90%;
+        max-width: 400px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        animation: fadeIn 0.3s ease;
+    }
+
+    .modal-header {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 15px;
+        text-align: center;
+    }
+
+    .modal input[type="text"], 
+    .modal input[type="email"] {
+        width: 90%;
+        padding: 12px;
+        margin: 10px 0;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+
+    .modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+
+    .modal-footer button {
+        padding: 10px 15px;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    /* Overlay */
+    .overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
     </style>
-    
 </head>
 <body>
     <div class="container">
         <header>
             <h1>Plataforma de Gestão das Bolsas de Ilha - <span>Procedimento concursal centralizado SER</span></h1>
-            
         </header>
+
         <!-- Sidebar -->
         <div class="sidebar">
             <ul>
@@ -28,20 +143,9 @@
                 <li><a href="/selectionpage">Inserção de vagas</a></li>
                 <li><a href="/consulta">Lista única Ordenação Final</a></li>
             </ul>
-            <button class="toggle-button">Bolsas de Ilha</button>
-            <ul class="bolsas-menu" style="display:none;">
-                <li><a href="/Bolsas/SaoMiguel">Bolsa de Ilha São Miguel</a></li>
-                <li><a href="/Bolsas/Terceira">Bolsa de Ilha Terceira</a></li>
-                <li><a href="/Bolsas/SantaMaria">Bolsa de Ilha Santa Maria</a></li>
-                <li><a href="/Bolsas/Faial">Bolsa de Ilha Faial</a></li>
-                <li><a href="/Bolsas/Pico">Bolsa de Ilha Pico</a></li>
-                <li><a href="/Bolsas/SaoJorge">Bolsa de Ilha São Jorge</a></li>
-                <li><a href="/Bolsas/Graciosa">Bolsa de Ilha Graciosa</a></li>
-                <li><a href="/Bolsas/Flores">Bolsa de Ilha Flores</a></li>
-                <li><a href="/Bolsas/Corvo">Bolsa de Ilha Corvo</a></li>
-            </ul>
             <ul>
                 <li><a href="/minhaconta">Minha conta</a></li>
+                <li><a href="/gerir_utilizadores">Gerir utilizadores</a></li>
                 <li><a href="/gerar_listas">Gerar listas</a></li>
                 <li><a href="/logout">Terminar sessão</a></li>
             </ul>
@@ -50,13 +154,187 @@
         <!-- Content Section -->
         <div class="content">
             <div class="container">
-                <h2>Gerir utilizadores</h2>
-        
-                
+                <h2>Gerir Utilizadores</h2>
+                <button onclick="openAddModal()">Adicionar utilizador</button>
+                <!-- User Table -->
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nome de Utilizador</th>
+                            <th>Email</th>
+                            <th>Última Atualização</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for admin in utilizadores %}
+                            <tr>
+                                <td>{{ admin.username }}</td>
+                                <td>{{ admin.email }}</td>
+                                <td>{{ admin.updated_at }}</td>
+                                <td class="actions">
+                                    <button onclick="openEditModal('{{ admin.id }}', '{{ admin.username }}', '{{ admin.email }}')">Editar</button>
+                                    <button onclick="resetPassword({{ admin.id }})">Repor password</button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
-        
-            <!-- Modal -->
-            
         </div>
+    </div>
+
+    <!-- Modals -->
+    <div class="overlay" id="overlay"></div>
+
+    <div class="modal" id="editModal">
+        <div class="modal-header">Editar Utilizador</div>
+        <input type="hidden" id="editUserId">
+        <input type="text" id="editUsername" placeholder="Nome de Utilizador">
+        <input type="email" id="editEmail" placeholder="Email">
+        <div class="modal-footer">
+            <button onclick="closeModal()">Cancelar</button>
+            <button onclick="saveEdit()">Guardar</button> <!-- Use a function call here -->
+        </div>
+    </div>
+
+    <div class="modal" id="addModal">
+        <div class="modal-header">Adicionar Utilizador</div>
+        <input type="text" id="addUsername" placeholder="Nome de Utilizador">
+        <input type="email" id="addEmail" placeholder="Email">
+        <div class="modal-footer">
+            <button onclick="closeModal()">Cancelar</button>
+            <button onclick="saveAdd()">Adicionar</button>
+        </div>
+    </div>
+
+    <script>
+        const overlay = document.getElementById('overlay');
+        const editModal = document.getElementById('editModal');
+        const addModal = document.getElementById('addModal');
+
+        function openEditModal(id, username, email) {
+            document.getElementById('editUserId').value = id;
+            document.getElementById('editUsername').value = username;
+            document.getElementById('editEmail').value = email;
+
+            overlay.style.display = 'block';
+            editModal.style.display = 'block';
+        }
+
+        function openAddModal() {
+            overlay.style.display = 'block';
+            addModal.style.display = 'block';
+        }
+
+        function closeModal() {
+            overlay.style.display = 'none';
+            editModal.style.display = 'none';
+            addModal.style.display = 'none';
+        }
+
+
+
+        function saveEdit() {
+            const userId = document.getElementById("editUserId").value; // Hidden input for user ID
+            const username = document.getElementById("editUsername").value;
+            const email = document.getElementById("editEmail").value;
+        
+            if (!username || !email) {
+                alert("Please fill out all fields.");
+                return; // Prevent the fetch call if inputs are empty
+            }
+        
+            const data = {
+                id: userId,
+                username: username,
+                email: email
+            };
+        
+            fetch("/edit_user", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Failed to update user");
+                }
+                return response.json();
+            })
+            .then(result => {
+                alert(result.message); // Handle success message
+                location.reload(); // Reload the page to update the table
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("Failed to update user. Please try again later.");
+            });
+        }
+
+        
+
+        function saveAdd() {
+            // Save the New User
+            const username = document.getElementById("addUsername").value;
+            const email = document.getElementById("addEmail").value;
+
+            if (!username || !email) {
+                alert("Por favor, preencha todos os campos.");
+                return; // Prevent the fetch call if inputs are empty
+            }
+
+            const data = {
+                username: username,
+                email: email
+            };
+
+            fetch("/add_admin", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Falha ao adicionar utilizador.");
+                }
+                return response.json();
+            })
+            .then(result => {
+                alert(result.message); // Handle success message
+                location.reload(); // Reload the page to update the table
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("Falha ao adicionar utilizador. Tente novamente mais tarde.");
+            });
+        };
+
+        function resetPassword(userId) {
+            if (confirm("Tem a certeza que deseja repor a password deste utilizador?")) {
+                fetch(`/repor_password/${userId}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    }
+                })
+                .then(response => response.json())
+                .then(result => {
+                    alert(result.message); // Show success or error message
+                    if (result.message.includes("sucesso")) {
+                        location.reload(); // Reload the page if successful
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("Ocorreu um erro ao repor a senha.");
+                });
+            }
+        }
+    </script>
 </body>
 </html>

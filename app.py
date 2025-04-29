@@ -367,9 +367,74 @@ def mainpage():
 def gerir_users():
     
     utilizadores = get_admins()
-    print(utilizadores)
     
-    return render_template('utilizadores.html')
+    
+    return render_template('utilizadores.html',utilizadores=utilizadores)
+
+@app.route('/edit_user', methods=['POST'])
+def edit_user():
+    data = request.json
+    user_id = data.get("id")
+    username = data.get("username")
+    email = data.get("email")
+
+    try:
+        # Update user in the database
+        connection = connect_to_database()
+        cursor = connection.cursor()
+        query = "UPDATE Admin SET username = %s, email = %s WHERE id = %s"
+        cursor.execute(query, (username, email, user_id))
+        connection.commit()
+        return jsonify({"message": "User updated successfully"})
+    except Exception as e:
+        return jsonify({"message": f"Error updating user: {str(e)}"}), 500
+    finally:
+        cursor.close()
+        connection.close()
+        
+@app.route('/add_admin', methods=['POST'])
+def add_admin():
+    data = request.get_json()
+    username = data.get('username')
+    email = data.get('email')
+
+    if not username or not email:
+        return jsonify({"message": "Todos os campos são obrigatórios."}), 400
+    password = generate_password_hash('Password%100', method="scrypt", salt_length=16)
+    
+    try:
+        connection = connect_to_database()
+        cursor = connection.cursor()
+        query = """
+        INSERT INTO Admin (username, email,password, updated_at)
+        VALUES (%s, %s,%s, NOW())
+        """
+        cursor.execute(query, (username, email,password))
+        connection.commit()
+        return jsonify({"message": "Utilizador adicionado com sucesso!"}), 201
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({"message": "Erro ao adicionar utilizador."}), 500
+    finally:
+        cursor.close()
+        connection.close()
+        
+@app.route('/repor_password/<int:id>', methods=["POST"])
+def repor_pass(id):
+    try:
+        connection = connect_to_database()
+        cursor = connection.cursor()
+        password = generate_password_hash('Password%100', method="scrypt", salt_length=16)
+        query = "UPDATE Admin SET password=%s WHERE id=%s"
+        cursor.execute(query, (password, id))
+        connection.commit()  # Use connection.commit(), not cursor.commit()
+        return jsonify({"message": "Password reposta com sucesso"})
+    except pymysql.MySQLError as e:
+        return jsonify({"message": f"Error updating password: {str(e)}"}), 500
+    finally:
+        cursor.close()
+        connection.close()
+        
 @app.route('/gerar_listas')
 def gerar_listas():
     ofertas_num = select_ofertas()
