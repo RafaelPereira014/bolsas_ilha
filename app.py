@@ -777,39 +777,50 @@ def submit_selection():
                
 
     for escola_nome, candidatos in candidates_by_school.items():
-        distrib = vagas_per_escola[escola_nome]['distribuicao']
+        # Skip schools with no candidates
+        if not candidatos:
+            print(f"Warning: No candidates found for school {escola_nome}")
+            continue
+
+        # Safely retrieve distrib value with a fallback
+        distrib = vagas_per_escola.get(escola_nome, {}).get('distribuicao', None)
+
+        if distrib is None:
+            # Handle the case where distrib is not defined for the school
+            print(f"Warning: 'distribuicao' not found for school {escola_nome}")
+            continue  # Skip to the next school if distrib is not available
+
         for candidato in candidatos:
-            
             update_query = """
             UPDATE users
             SET estado = 'a aguardar resposta', distribuicao = %s
             WHERE id = %s
             """
             execute_update(update_query, (distrib, candidato['candidato_id']))
-            
+
             id_bolsa = get_bolsa_id_for_school(escola_nome)
-            
+
             insert_query2 = """
-                INSERT INTO colocados (user_id, bolsa_id, escola_nome, contrato_id, escola_priority_id, placement_date,estado,oferta_num)
-                VALUES (%s, %s, %s, %s, %s, NOW(),'a aguardar resposta',%s)
+                INSERT INTO colocados (user_id, bolsa_id, escola_nome, contrato_id, escola_priority_id, placement_date, estado, oferta_num)
+                VALUES (%s, %s, %s, %s, %s, NOW(), 'a aguardar resposta', %s)
             """
-            
-            
-            
-            execute_insert(insert_query2, (candidato['candidato_id'], id_bolsa, candidato['escola_nome'], contrato_tipo, candidato['escola_priority_id'],curr_oferta))
-            
-                  
-        
+            execute_insert(insert_query2, (
+                candidato['candidato_id'], 
+                id_bolsa, 
+                escola_nome, 
+                contrato_tipo, 
+                candidato['escola_priority_id'], 
+                curr_oferta
+            ))
 
     return render_template('resultados.html', 
-                           candidates_by_school=candidates_by_school, 
-                           vagas_per_escola=vagas_per_escola,  
-                           initial_vagas_per_escola=initial_vagas_per_escola,
-                           date_today=date_today, 
-                           contrato_tipo=contrato_tipo, 
-                           total_vagas=total_vagas,
-                            curr_oferta= curr_oferta,
-                            distrib=distrib)
+                        candidates_by_school=candidates_by_school, 
+                        vagas_per_escola=vagas_per_escola,  
+                        initial_vagas_per_escola=initial_vagas_per_escola,
+                        date_today=date_today, 
+                        contrato_tipo=contrato_tipo, 
+                        total_vagas=total_vagas,
+                        curr_oferta=curr_oferta)
 
 @app.route('/send-email', methods=['POST'])
 def send_email_route():

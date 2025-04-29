@@ -1,0 +1,8 @@
+
+Selected Candidates by School:
+Escola                         Candidato ID    Nome                           Nota       Deficiência    
+----------------------------------------------------------------------------------------------------
+ES JERÓNIMO EMILIANO ANDRADE   1519            Diogo Areias Pacheco           17.78      não            
+------------------------------------------------------------------------ES JERÓNIMO EMILIANO ANDRADE   1513            Rui Branco                     14.30      não            
+------------------------------------------------------------------------ES JERÓNIMO EMILIANO ANDRADE   1511            Daniela Madeira Balsinhas de Ávila Gomes 9.65       sim            
+------------------------------------------------------------------------
