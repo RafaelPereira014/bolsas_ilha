@@ -54,54 +54,55 @@ def get_user_info(bolsa_id, user_ids):
         connection.close()
         
 def user_infos(user_id):
-    connection = connect_to_database()  # Ensure this function connects to your database
+    connection = connect_to_database()
     cursor = connection.cursor()
 
     try:
         query = """
         SELECT u.id AS candidato_id, u.nome, u.contacto, u.deficiencia, 
                u.avaliacao_curricular, u.prova_de_conhecimentos, u.nota_final, 
-               u.estado, u.observacoes, u.distribuicao, u.NIF, u.local_prova,u.oferta_num,u.email,
+               u.estado, u.observacoes, u.distribuicao, u.NIF, u.local_prova, u.oferta_num, u.email,
                d.file_name, d.upload_date
         FROM users u
-        LEFT JOIN documents d ON u.id = d.user_id  -- Use LEFT JOIN to include users with no documents
+        LEFT JOIN documents d ON u.id = d.user_id
         WHERE u.id = %s
         """
         cursor.execute(query, (user_id,))
-        result = cursor.fetchall()  # Fetch all results for the user
+        result = cursor.fetchall()
 
-        # Return the result as a dictionary if a user is found
-        if result:
-            user_info = {
-                "id": result[0][0],
-                "nome": result[0][1],
-                "contacto": result[0][2],
-                "deficiencia": result[0][3],  # Include deficiencia
-                "avaliacao_curricular": result[0][4],
-                "prova_de_conhecimentos": result[0][5],
-                "nota_final": result[0][6],
-                "estado": result[0][7],
-                "observacoes": result[0][8],  # Include observacoes
-                "distribuicao": result[0][9],
-                "NIF": result[0][10],
-                "local_prova": result[0][11],
-                "documentos": [],
-                "oferta_num": result[0][12],
-                "email": result[0][13]
-                
-            }
+        if not result:
+            return {}  # Return empty dictionary if no user is found
 
-            # Populate the documentos list with file names and upload dates
-            for row in result:
-                if row[12]:  # Check if file_name is not None
-                    user_info["documentos"].append({
-                        "file_name": row[12],
-                        "upload_date": row[13]
-                    })
+        # Extract user information from the first row
+        user_info = {
+            "id": result[0][0],
+            "nome": result[0][1],
+            "contacto": result[0][2],
+            "deficiencia": result[0][3],
+            "avaliacao_curricular": result[0][4],
+            "prova_de_conhecimentos": result[0][5],
+            "nota_final": result[0][6],
+            "estado": result[0][7],
+            "observacoes": result[0][8],
+            "distribuicao": result[0][9],
+            "NIF": result[0][10],
+            "local_prova": result[0][11],
+            "oferta_num": result[0][12],
+            "email": result[0][13],
+            "documentos": []  # Initialize empty list for documents
+        }
 
-            return user_info
+        # Append documents if they exist
+        for row in result:
+            file_name = row[14]
+            upload_date = row[15]
+            if file_name and upload_date:  # Check if both values are present
+                user_info["documentos"].append({
+                    "file_name": file_name,
+                    "upload_date": upload_date
+                })
 
-        return {}  # Return an empty dictionary if no user is found
+        return user_info
 
     except Exception as e:
         print(f"Error: {e}")

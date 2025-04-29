@@ -153,7 +153,7 @@ def upload_document_bolsa(bolsa_id):
 @app.route('/download/<file_name>', methods=['GET'])
 def download_file(file_name):
     # Define the directory where files are stored
-    upload_folder = '/Users/rafaelpereira/Desktop/projeto_Bolsas/static/uploads'
+    upload_folder = 'static/uploads'
     
     try:
         # Serve the file from the uploads directory
@@ -179,7 +179,7 @@ def minhaconta():
 @app.route('/user_profile/<int:user_id>', methods=['GET', 'POST'])
 def user_profile(user_id):
     user_info = user_infos(user_id)
-    
+    print(user_info)
     # Check if user_info is valid
     if not user_info or 'id' not in user_info:
         flash('User not found', 'error')
@@ -817,7 +817,6 @@ def send_email_route():
     recipient = data.get('email')
     escola = data.get('escola')
     sgc = data.get('sgc')
-    print(sgc)
     message = data.get('message')
 
     if recipient and message:
