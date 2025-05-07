@@ -9,7 +9,7 @@ def connect_to_database():
 def get_id_contrato(tipo_de_vinculo):
     contrato_mapping = {
         "CTFP por tempo Indeterminado": 1,
-        "CTFP a termo resolutivo - Bolsa de Ilha": 2,
+        "CTFP a termo resolutivo": 2,
         "CTFP ambos  - Bolsa de Ilha": 3
     }
     return contrato_mapping.get(tipo_de_vinculo, None)
