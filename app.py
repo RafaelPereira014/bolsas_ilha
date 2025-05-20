@@ -331,7 +331,7 @@ def mainpage():
     colocados = get_colocados()
     vagas = get_vagas_per_bolsa()
     curr_oferta = get_curr_oferta()
-
+    
     for vaga in vagas:
         vaga['total_vagas'] = int(vaga['total_vagas'] or 0)  
 
@@ -848,9 +848,10 @@ def send_email_route():
 @app.route('/consulta')
 def metadatapage():
     
-    scores = get_all_user_scores()  # Fetch paginated results
+      # Fetch paginated results
+    total_count = get_total_user_count()  # Count total results
     curr_oferta= get_curr_oferta()
-    total_count = get_total_user_count(curr_oferta)  
+    scores = get_all_user_scores(curr_oferta)
     return render_template('consulta.html', scores=scores,  total_count=total_count,curr_oferta=curr_oferta)
 
 @app.route('/view_escolas/<int:user_id>/<int:bolsa_id>')
