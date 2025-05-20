@@ -339,7 +339,7 @@ def get_total_user_count():
         return results[0] if results else 0
     return 0
 
-def get_all_user_scores():
+def get_all_user_scores(oferta_num):
     connection = connect_to_database()
     cursor = connection.cursor()
 
@@ -348,10 +348,11 @@ def get_all_user_scores():
         SELECT u.id, u.nome, u.nota_final, u.estado, GROUP_CONCAT(ub.Bolsa_id) AS bolsa_ids
         FROM users u
         LEFT JOIN userbolsas ub ON u.id = ub.user_id 
+        WHERE u.oferta_num=%s
         GROUP BY u.id
         ORDER BY u.nota_final DESC
         """
-        cursor.execute(query, )  # Pass parameters for pagination
+        cursor.execute(query,(oferta_num) )  # Pass parameters for pagination
         results = cursor.fetchall()
 
         scores = []
