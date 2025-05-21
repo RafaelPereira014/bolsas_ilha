@@ -583,13 +583,20 @@ def get_ofertas():
         connection.close()
         
 def get_users_by_oferta(selected_oferta):
-
     connection = connect_to_database()  # Ensure this function is defined correctly
-    cursor = connection.cursor(pymysql.cursors.DictCursor)  # Use dictionary=True for fetching rows as dicts
+    cursor = connection.cursor(pymysql.cursors.DictCursor)  # Use DictCursor for dictionary-like row results
 
     try:
-        # SQL query to fetch users
-        query = "SELECT * FROM users WHERE oferta_num = %s"
+        # SQL query to fetch users and their placement details
+        query = """
+            SELECT 
+                users.*, 
+                colocados.placement_date, 
+                colocados.alterado_por
+            FROM users
+            JOIN colocados ON colocados.user_id = users.id
+            WHERE users.oferta_num = %s
+        """
         cursor.execute(query, (selected_oferta,))  # Parameterized query to prevent SQL injection
         results = cursor.fetchall()  # Fetch all matching rows
         return results

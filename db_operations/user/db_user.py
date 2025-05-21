@@ -171,7 +171,7 @@ def get_colocados(curr_oferta):
         co.tipo AS tipo_contrato, 
         c.escola_priority_id, 
         c.placement_date,
-        c.estado  
+        c.estado 
     FROM colocados AS c
     LEFT JOIN Bolsa AS b ON c.bolsa_id = b.id
     LEFT JOIN contrato AS co ON c.contrato_id = co.id

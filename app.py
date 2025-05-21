@@ -869,6 +869,9 @@ def historico_ofertas():
 
     candidaturas = get_users_by_oferta(selected_oferta) if selected_oferta else []
     
+
+    
+    
     # Optional: Filter candidaturas based on search term
     # if search:
     #     candidaturas = [
