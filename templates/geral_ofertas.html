@@ -85,17 +85,15 @@
                 </thead>
 
                 <tbody>
-                    {%for candidatura in candidaturas %}
+                    {% for candidatura in candidaturas %}
                     <tr>
-                        <td>{{cadidatura['nome']}}</td>
-                        <td>{{cadidatura['nota_final']}}</td>
-                        <td>{{cadidatura['estado']}}</td>
-                        <td>{{cadidatura['nome']}}</td>
-                        <td>{{cadidatura['nome']}}</td>
-                        
+                        <td>{{ candidatura['nome'] }}</td>
+                        <td>{{ candidatura['nota_final'] }}</td>
+                        <td>{{ candidatura['estado'] }}</td>
+                        <td>{{ candidatura['data_colocacao'] }}</td>
+                        <td>{{ candidatura['analisado_por'] }}</td>
                     </tr>
-                    {%endfor%}
-                    
+                    {% endfor %}
                 </tbody>
             </table>
             <div class="d-flex justify-content-center mt-3">

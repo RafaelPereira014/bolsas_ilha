@@ -859,30 +859,36 @@ def metadatapage():
 
 @app.route('/historico_ofertas')
 def historico_ofertas():
-    
-    ofertas = get_ofertas()  # Fetch available years
-    selected_oferta = request.args.get('ano')
-    print(selected_oferta)
+    ofertas = get_ofertas()  # Fetch available offers
+    selected_oferta = request.args.get('ano')  # Default to latest year if none selected
+
+    # Pagination and search parameters
     per_page = int(request.args.get('per_page', 10))  # Default to 10 items per page
     page = int(request.args.get('page', 1))  # Default to the first page
-    search = request.args.get('search', default='')
+    search = request.args.get('search', '').strip()  # Default to empty string
 
-    candidaturas = get_users_by_oferta(selected_oferta)
-    
-    # # Check if the "Limpar" button was clicked
-    # if request.args.get('clear_search'):
-    #     search = ''  # Clear the search parameter
+    candidaturas = get_users_by_oferta(selected_oferta) if selected_oferta else []
 
-    # if selected_year:
-    #     candidaturas = admin.get_candidaturas_by_filters(selected_year, per_page, page, search)
-    #     #no_candidaturas = admin.get_candidaturas_count(selected_year)
-    # else:
-    #     candidaturas = admin.get_all_candidaturas(per_page, page)
-    #     #no_candidaturas = admin.get_candidaturas_count()
+    # Optional: Filter candidaturas based on search term
+    # if search:
+    #     candidaturas = [
+    #         c for c in candidaturas
+    #         if search.lower() in c['nome'].lower()
+    #     ]
 
-    
-     
-    return render_template('geral_ofertas.html',per_page=per_page,page=page,ofertas=ofertas,candidaturas=candidaturas)
+    # Paginate the candidaturas list
+    start_index = (page - 1) * per_page
+    end_index = start_index + per_page
+    paginated_candidaturas = candidaturas[start_index:end_index]
+
+    return render_template(
+        'geral_ofertas.html',
+        per_page=per_page,
+        page=page,
+        ofertas=ofertas,
+        candidaturas=paginated_candidaturas,
+        total=len(candidaturas),
+    )
 
 
 
