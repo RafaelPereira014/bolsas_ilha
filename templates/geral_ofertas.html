@@ -121,13 +121,13 @@
                         </td>
                         <td>{{ candidatura['nota_final'] }}</td>
                         <td>
-                            {% if candidatura['estado'] == 'Aceite' %}
+                            {% if candidatura['estado'] == 'aceite' %}
                                 <span class="badge badge-aceite">Aceite</span>
-                            {% elif candidatura['estado'] == 'A aguardar resposta' %}
+                            {% elif candidatura['estado'] == 'a aguardar resposta' %}
                                 <span class="badge badge-aguardar">A aguardar resposta</span>
-                            {% elif candidatura['estado'] == 'Excluido' %}
+                            {% elif candidatura['estado'] == 'excluido' %}
                                 <span class="badge badge-excluido">Excluido</span>
-                            {% elif candidatura['estado'] == 'Livre' %}
+                            {% elif candidatura['estado'] == 'livre' %}
                                 <span class="badge badge-livre">Livre</span>
                             {% endif %}
                         </td>
