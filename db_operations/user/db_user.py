@@ -178,7 +178,7 @@ def get_colocados(curr_oferta):
     WHERE c.oferta_num = %s
     ORDER BY c.placement_date DESC
     """
-    cursor.execute(query,(curr_oferta))
+    cursor.execute(query,(curr_oferta,))
     results = cursor.fetchall()
 
     colocados_list = [
