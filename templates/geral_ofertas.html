@@ -121,14 +121,16 @@
                         </td>
                         <td>{{ candidatura['nota_final'] }}</td>
                         <td>
-                            {% if candidatura['estado'] == 'aceite' %}
-                                <span class="badge badge-aceite">Aceite</span>
-                            {% elif candidatura['estado'] == 'a aguardar resposta' %}
-                                <span class="badge badge-aguardar">A aguardar resposta</span>
-                            {% elif candidatura['estado'] == 'negado' %}
-                                <span class="badge badge-excluido">Excluido</span>
-                            {% elif candidatura['estado'] == 'livre' %}
-                                <span class="badge badge-livre">Livre</span>
+                            {% if candidatura['estado'] == "livre" %}
+                                <i class="fas fa-check-circle" style="color: green;"></i> Livre
+                            {% elif candidatura['estado'] == "a aguardar resposta" %}
+                                <i class="fas fa-clock" style="color: orange;"></i> A Aguardar Resposta
+                            {% elif candidatura['estado'] == "aceite" %}
+                                <i class="fas fa-thumbs-up" style="color: blue;"></i> Aceite
+                            {% elif candidatura['estado'] == "negado" %}
+                                <i class="fas fa-thumbs-down" style="color: red;"></i> Excluído
+                            {% else %}
+                                <i class="fas fa-question-circle" style="color: gray;"></i> Estado Desconhecido
                             {% endif %}
                         </td>
                         <td>{{ candidatura['placement_date'] }}</td>
