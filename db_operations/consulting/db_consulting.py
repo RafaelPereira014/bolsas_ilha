@@ -193,7 +193,7 @@ def get_escolas_by_users(user_ids, bolsa_id,oferta_num):
         """
 
         # Execute the query with the list of user_ids and bolsa_id
-        cursor.execute(query, tuple(user_ids) + (bolsa_id,oferta_num,oferta_num,))
+        cursor.execute(query, tuple(user_ids) + (bolsa_id,oferta_num,oferta_num))
 
         results = cursor.fetchall()
 
