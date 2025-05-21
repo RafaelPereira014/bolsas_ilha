@@ -585,7 +585,7 @@ def get_ofertas():
 def get_users_by_oferta(selected_oferta):
 
     connection = connect_to_database()  # Ensure this function is defined correctly
-    cursor = connection.cursor()  # Use dictionary=True for fetching rows as dicts
+    cursor = connection.cursor(pymysql.cursors.DictCursor)  # Use dictionary=True for fetching rows as dicts
 
     try:
         # SQL query to fetch users

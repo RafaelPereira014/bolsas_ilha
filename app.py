@@ -868,6 +868,7 @@ def historico_ofertas():
     search = request.args.get('search', '').strip()  # Default to empty string
 
     candidaturas = get_users_by_oferta(selected_oferta) if selected_oferta else []
+    print(candidaturas)
 
     # Optional: Filter candidaturas based on search term
     # if search:
