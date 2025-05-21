@@ -700,6 +700,7 @@ def submit_selection():
 
     contrato_tipo = request.form['contrato_id']
     
+    
 
     initial_vagas_per_escola = {escola_nome: {
         'vagas_normais': vagas_info['vagas_normais'],
