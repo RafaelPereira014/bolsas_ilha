@@ -587,14 +587,22 @@ def get_users_by_oferta(selected_oferta):
     cursor = connection.cursor(pymysql.cursors.DictCursor)  # Use DictCursor for dictionary-like row results
 
     try:
-        # SQL query to fetch users and their placement details
+        # SQL query to fetch users and their latest placement details
         query = """
             SELECT 
                 users.*, 
                 colocados.placement_date, 
                 colocados.alterado_por
             FROM users
-            JOIN colocados ON colocados.user_id = users.id
+            JOIN (
+                SELECT user_id, MAX(placement_date) AS latest_placement_date
+                FROM colocados
+                GROUP BY user_id
+            ) latest_colocados
+            ON users.id = latest_colocados.user_id
+            JOIN colocados 
+            ON colocados.user_id = latest_colocados.user_id 
+            AND colocados.placement_date = latest_colocados.latest_placement_date
             WHERE users.oferta_num = %s
         """
         cursor.execute(query, (selected_oferta,))  # Parameterized query to prevent SQL injection
