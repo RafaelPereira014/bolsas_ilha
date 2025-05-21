@@ -601,15 +601,16 @@ def process_csv():
 @app.route('/limpar_estados', methods=['POST'])
 def limpar_estados():
     connection = create_connection()
+    curr_oferta = get_curr_oferta()
     try:
         with connection.cursor() as cursor:
             # Update all rows in Users to set estado to 'livre'
-            update_query = "UPDATE users SET estado = 'livre'"
-            cursor.execute(update_query)
+            update_query = "UPDATE users SET estado = 'livre' where oferta_num=%s"
+            cursor.execute(update_query,curr_oferta)
             
             # Delete all rows from colocados
-            delete_query = "DELETE FROM colocados"
-            cursor.execute(delete_query)
+            delete_query = "DELETE FROM colocados where oferta_num=%s"
+            cursor.execute(delete_query,curr_oferta)
             
             # Delete all rows from colocados
             delete_query2 = "DELETE FROM vagas_per_bolsa"
@@ -724,7 +725,7 @@ def submit_selection():
             JOIN user_escola ue ON u.id = ue.user_id
             JOIN escola e ON ue.escola_id = e.id
             LEFT JOIN colocados c ON u.id = c.user_id
-            WHERE ub.Bolsa_id = %s
+            WHERE ub.Bolsa_id = %s and u.oferta_num = %s
             AND (
                 (u.estado = 'livre')  
                 OR (u.estado = 'aceite' AND c.contrato_id = 2)  
@@ -735,7 +736,7 @@ def submit_selection():
                 OR (%s = 3 AND (ub.contrato_id = 1 OR ub.contrato_id = 2 OR ub.contrato_id = 3))  
             )
         """
-        candidates = execute_query(query, (bolsa_id, contrato_tipo, contrato_tipo, contrato_tipo))
+        candidates = execute_query(query, (bolsa_id,curr_oferta, contrato_tipo, contrato_tipo, contrato_tipo))
         all_candidates.extend(candidates)
 
     # Sort all candidates by nota_final (DESC) and escola_priority_id (ASC)
@@ -876,14 +877,15 @@ def update_status():
     data = request.json
     user_id = data['user_id']
     new_status = data['new_status']
+    curr_oferta = get_curr_oferta()
     
     conn = create_connection()  # Assuming this creates a MySQL connection
     cursor = conn.cursor()
 
     try:
         # Update the user's status in the Users table
-        update_query = "UPDATE users SET estado = %s WHERE id = %s"
-        cursor.execute(update_query, (new_status, user_id))
+        update_query = "UPDATE users SET estado = %s WHERE id = %s and oferta_num=%s"
+        cursor.execute(update_query, (new_status, user_id,curr_oferta))
         conn.commit()
 
         # Fetch the last row for this user from colocados
