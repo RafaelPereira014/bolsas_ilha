@@ -51,7 +51,7 @@
                     <label for="ano" class="form-label me-2">Oferta:</label>
                     <select id="ano-dropdown" name="ano" class="form-select me-3" onchange="this.form.submit()">
                         {% for ano in ofertas %}
-                            <option value="{{ ano }}" {% if ano == selected_year %}selected{% endif %}>
+                            <option value="{{ ano }}" {% if ano == selected_oferta %}selected{% endif %}>
                                 {{ ano }}
                             </option>
                         {% endfor %}
@@ -87,7 +87,11 @@
                 <tbody>
                     {% for candidatura in candidaturas %}
                     <tr>
-                        <td>{{ candidatura['nome'] }}</td>
+                        <td>
+                            <a href="{{ url_for('user_profile', user_id=candidatura['id']) }}">
+                                {{ candidatura['nome'] }}
+                            </a>
+                        </td>
                         <td>{{ candidatura['nota_final'] }}</td>
                         <td>{{ candidatura['estado'] }}</td>
                         <td>{{ candidatura['data_colocacao'] }}</td>
@@ -112,108 +116,5 @@
     </div>
     
 </body>
-<!-- Popup Modal -->
-<div id="escolasModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <h2 id="modalTitle">Escolas e Prioridades</h2>
-        <div id="escolasList"></div>
-    </div>
-</div>
-<script>
-    document.querySelector('.toggle-button').addEventListener('click', function() {
-        const bolsasMenu = document.querySelector('.bolsas-menu');
-        bolsasMenu.style.display = bolsasMenu.style.display === 'block' ? 'none' : 'block';
-    });
-</script>
-<script>
-    function showEscolasPopup(userId, userName) {
-        const escolasList = document.getElementById('escolasList');
-        const modalTitle = document.getElementById('modalTitle');
-        escolasList.innerHTML = ""; // Clear previous content
-    
-        // Set the user's name in the modal title
-        modalTitle.textContent = `Escolas e Prioridades de ${userName}`;
-    
-        // Fetch escolas for the selected user
-        fetch(`/view_escolas/${userId}/49`) // Update with your bolsa_id logic
-            .then(response => response.json())
-            .then(data => {
-                if (data && data.length) {
-                    data.forEach(escola => {
-                        const escolaInfo = document.createElement('div');
-                        escolaInfo.textContent = `${escola.escola_nome}, Prioridade: ${escola.escola_priority_id}`;
-                        escolasList.appendChild(escolaInfo);
-                    });
-                } else {
-                    escolasList.textContent = "Nenhuma escola encontrada.";
-                }
-                document.getElementById('escolasModal').style.display = "block"; // Show modal
-            });
-    }
-    
-    function closeModal() {
-        document.getElementById('escolasModal').style.display = "none"; // Hide modal
-    }
-</script>
-<script>
-    function updateStatus(userId, newStatus) {
-        fetch(`/update_status`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                user_id: userId,
-                new_status: newStatus
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('Status updated successfully');
-            } else {
-                alert('Error updating status');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('An error occurred while updating status');
-        });
-    }
-</script>
 
-<script>
-    document.getElementById('uploadForm').addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevent the default form submission
-
-        const formData = new FormData(this);
-
-        fetch(this.action, {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Clear the current list
-                const documentList = document.getElementById('documentList');
-                documentList.innerHTML = '';
-
-                // Append the new documents
-                data.documents.forEach(doc => {
-                    const li = document.createElement('li');
-                    li.textContent = doc.filename; // Display the filename
-                    documentList.appendChild(li);
-                });
-            } else {
-                alert('Error uploading document: ' + data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('An error occurred while uploading the document');
-        });
-    });
-</script>
 </html>

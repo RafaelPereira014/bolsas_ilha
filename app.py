@@ -860,7 +860,8 @@ def metadatapage():
 @app.route('/historico_ofertas')
 def historico_ofertas():
     ofertas = get_ofertas()  # Fetch available offers
-    selected_oferta = request.args.get('ano')  # Default to latest year if none selected
+    curr_oferta = get_curr_oferta()
+    selected_oferta = request.args.get('ano',curr_oferta)  # Default to latest year if none selected
 
     # Pagination and search parameters
     per_page = int(request.args.get('per_page', 10))  # Default to 10 items per page
@@ -868,8 +869,7 @@ def historico_ofertas():
     search = request.args.get('search', '').strip()  # Default to empty string
 
     candidaturas = get_users_by_oferta(selected_oferta) if selected_oferta else []
-    print(candidaturas)
-
+    
     # Optional: Filter candidaturas based on search term
     # if search:
     #     candidaturas = [
@@ -889,6 +889,7 @@ def historico_ofertas():
         ofertas=ofertas,
         candidaturas=paginated_candidaturas,
         total=len(candidaturas),
+        selected_oferta=selected_oferta
     )
 
 
