@@ -302,12 +302,12 @@ def total_escolas():
     
     return results[0] if results else 0  # Return 0 if results is None
 
-def total_users():
+def total_users(curr_oferta):
     # Create a database connection
     connection = connect_to_database()
     cursor = connection.cursor()
     
-    cursor.execute("SELECT COUNT(*) FROM users")
+    cursor.execute("SELECT COUNT(*) FROM users where oferta_num=%s",(curr_oferta,))
     results = cursor.fetchone()
     
     cursor.close()

@@ -325,7 +325,7 @@ def mainpage():
     curr_oferta = get_curr_oferta()
     no_bolsas = total_bolsas()
     no_escolas = total_escolas()
-    no_users = total_users()
+    no_users = total_users(curr_oferta)
     no_colocados = total_colocados(curr_oferta)
     all_schools = get_all_escola_names()
     colocados = get_colocados(curr_oferta)
