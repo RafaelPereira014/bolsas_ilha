@@ -596,7 +596,7 @@ def get_users_by_oferta(selected_oferta):
                 colocados.escola_nome
             FROM users
             JOIN (
-                SELECT user_id, MAX(placement_date) AS latest_placement_date
+                SELECT user_id, MAX(placement_date) AS latest_placement_date,escola_nome
                 FROM colocados
                 GROUP BY user_id
             ) latest_colocados
@@ -604,7 +604,6 @@ def get_users_by_oferta(selected_oferta):
             JOIN colocados 
             ON colocados.user_id = latest_colocados.user_id 
             AND colocados.placement_date = latest_colocados.latest_placement_date
-            AND colocados.escola_nome = latest_colocados.escola_nome
             WHERE users.oferta_num = %s
             ORDER BY users.nota_final DESC
         """
