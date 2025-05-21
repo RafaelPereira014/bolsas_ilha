@@ -604,7 +604,7 @@ def get_users_by_oferta(selected_oferta):
             ON colocados.user_id = latest_colocados.user_id 
             AND colocados.placement_date = latest_colocados.latest_placement_date
             WHERE users.oferta_num = %s
-            ORDER BY users.nota_final
+            ORDER BY users.nota_final DESC
         """
         cursor.execute(query, (selected_oferta,))  # Parameterized query to prevent SQL injection
         results = cursor.fetchall()  # Fetch all matching rows
