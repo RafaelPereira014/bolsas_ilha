@@ -179,7 +179,6 @@ def minhaconta():
 @app.route('/user_profile/<int:user_id>', methods=['GET', 'POST'])
 def user_profile(user_id):
     user_info = user_infos(user_id)
-    print(user_info)
     # Check if user_info is valid
     if not user_info or 'id' not in user_info:
         flash('User not found', 'error')
