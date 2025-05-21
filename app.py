@@ -726,7 +726,7 @@ def submit_selection():
             JOIN user_escola ue ON u.id = ue.user_id
             JOIN escola e ON ue.escola_id = e.id
             LEFT JOIN colocados c ON u.id = c.user_id
-            WHERE ub.Bolsa_id = %s and u.oferta_num = %s
+            WHERE ub.Bolsa_id = %s and u.oferta_num = %s and ub.oferta_num = %s and ue.oferta_num = %s
             AND (
                 (u.estado = 'livre')  
                 OR (u.estado = 'aceite' AND c.contrato_id = 2)  
@@ -737,7 +737,7 @@ def submit_selection():
                 OR (%s = 3 AND (ub.contrato_id = 1 OR ub.contrato_id = 2 OR ub.contrato_id = 3))  
             )
         """
-        candidates = execute_query(query, (bolsa_id,curr_oferta, contrato_tipo, contrato_tipo, contrato_tipo))
+        candidates = execute_query(query, (bolsa_id,curr_oferta,curr_oferta,curr_oferta, contrato_tipo, contrato_tipo, contrato_tipo))
         all_candidates.extend(candidates)
 
     # Sort all candidates by nota_final (DESC) and escola_priority_id (ASC)
@@ -1051,7 +1051,7 @@ def bolsa_sao_miguel():
 
     # Fetch escolas for the current page of users
     user_ids_paginated = [user['id'] for user in user_info]
-    escolas_bolsa = get_escolas_by_users(user_ids_paginated, bolsa_id)
+    escolas_bolsa = get_escolas_by_users(user_ids_paginated, bolsa_id,curr_oferta)
 
     # Calculate total number of pages
     total_pages = (total_users + per_page - 1) // per_page
@@ -1145,7 +1145,7 @@ def bolsa_terceira():
 
     # Fetch escolas for the current page of users
     user_ids_paginated = [user['id'] for user in user_info]
-    escolas_bolsa = get_escolas_by_users(user_ids_paginated, bolsa_id)
+    escolas_bolsa = get_escolas_by_users(user_ids_paginated, bolsa_id,curr_oferta)
     
 
     # Calculate total number of pages
@@ -1240,7 +1240,7 @@ def bolsa_santa_maria():
 
     # Fetch escolas for the current page of users
     user_ids_paginated = [user['id'] for user in user_info]
-    escolas_bolsa = get_escolas_by_users(user_ids_paginated, bolsa_id)
+    escolas_bolsa = get_escolas_by_users(user_ids_paginated, bolsa_id,curr_oferta)
 
     # Calculate total number of pages
     total_pages = (total_users + per_page - 1) // per_page
@@ -1333,7 +1333,7 @@ def bolsa_faial():
 
     # Fetch escolas for the current page of users
     user_ids_paginated = [user['id'] for user in user_info]
-    escolas_bolsa = get_escolas_by_users(user_ids_paginated, bolsa_id)
+    escolas_bolsa = get_escolas_by_users(user_ids_paginated, bolsa_id,curr_oferta)
 
     # Calculate total number of pages
     total_pages = (total_users + per_page - 1) // per_page
@@ -1426,7 +1426,7 @@ def bolsa_pico():
 
     # Fetch escolas for the current page of users
     user_ids_paginated = [user['id'] for user in user_info]
-    escolas_bolsa = get_escolas_by_users(user_ids_paginated, bolsa_id)
+    escolas_bolsa = get_escolas_by_users(user_ids_paginated, bolsa_id,curr_oferta)
 
     # Calculate total number of pages
     total_pages = (total_users + per_page - 1) // per_page
@@ -1519,7 +1519,7 @@ def bolsa_sao_jorge():
 
     # Fetch escolas for the current page of users
     user_ids_paginated = [user['id'] for user in user_info]
-    escolas_bolsa = get_escolas_by_users(user_ids_paginated, bolsa_id)
+    escolas_bolsa = get_escolas_by_users(user_ids_paginated, bolsa_id,curr_oferta)
 
     # Calculate total number of pages
     total_pages = (total_users + per_page - 1) // per_page
@@ -1612,7 +1612,7 @@ def bolsa_graciosa():
 
     # Fetch escolas for the current page of users
     user_ids_paginated = [user['id'] for user in user_info]
-    escolas_bolsa = get_escolas_by_users(user_ids_paginated, bolsa_id)
+    escolas_bolsa = get_escolas_by_users(user_ids_paginated, bolsa_id,curr_oferta)
 
     # Calculate total number of pages
     total_pages = (total_users + per_page - 1) // per_page
@@ -1704,7 +1704,7 @@ def bolsa_flores():
 
     # Fetch escolas for the current page of users
     user_ids_paginated = [user['id'] for user in user_info]
-    escolas_bolsa = get_escolas_by_users(user_ids_paginated, bolsa_id)
+    escolas_bolsa = get_escolas_by_users(user_ids_paginated, bolsa_id,curr_oferta)
 
     # Calculate total number of pages
     total_pages = (total_users + per_page - 1) // per_page
@@ -1797,7 +1797,7 @@ def bolsa_corvo():
 
     # Fetch escolas for the current page of users
     user_ids_paginated = [user['id'] for user in user_info]
-    escolas_bolsa = get_escolas_by_users(user_ids_paginated, bolsa_id)
+    escolas_bolsa = get_escolas_by_users(user_ids_paginated, bolsa_id,curr_oferta)
 
     # Calculate total number of pages
     total_pages = (total_users + per_page - 1) // per_page

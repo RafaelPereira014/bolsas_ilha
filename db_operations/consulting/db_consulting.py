@@ -161,7 +161,7 @@ def get_escolas_by_bolsa(user_id, bolsa_id):
         cursor.close()
         connection.close()
         
-def get_escolas_by_users(user_ids, bolsa_id):
+def get_escolas_by_users(user_ids, bolsa_id,oferta_num):
     # Create a database connection
     connection = connect_to_database()
     cursor = connection.cursor()
@@ -188,10 +188,12 @@ def get_escolas_by_users(user_ids, bolsa_id):
                     ON ue.escola_id = e.id  -- Join with Escola to get the school name
                 WHERE ue.user_id IN ({placeholders}) 
                 AND be.bolsa_id = %s
+                AND ue.oferta_num = %s
+                AND ub.oferta_num = %s
         """
 
         # Execute the query with the list of user_ids and bolsa_id
-        cursor.execute(query, tuple(user_ids) + (bolsa_id,))
+        cursor.execute(query, tuple(user_ids) + (bolsa_id,oferta_num,oferta_num,))
 
         results = cursor.fetchall()
 
