@@ -62,7 +62,7 @@ def user_infos(user_id):
         query = """
         SELECT u.id AS candidato_id, u.nome, u.contacto, u.deficiencia, 
                u.avaliacao_curricular, u.prova_de_conhecimentos, u.nota_final, 
-               u.estado, u.observacoes, u.distribuicao, u.NIF, u.local_prova, u.oferta_num, u.email
+               u.estado, u.observacoes, u.distribuicao, u.NIF, u.local_prova, u.oferta_num, u.email,
                d.file_name, d.upload_date
         FROM users u
         LEFT JOIN documents d ON u.id = d.user_id
