@@ -86,18 +86,18 @@ def insert_data_to_db(json_data, db_config):
                     ordem_de_preferencia = preferencia['ordemDePreferencia']
                     
                     bolsa_query = """
-                        INSERT INTO userbolsas (user_id, Bolsa_id, contrato_id)
-                        VALUES (%s, %s, %s)
+                        INSERT INTO userbolsas (user_id, Bolsa_id, contrato_id,oferta_num)
+                        VALUES (%s, %s, %s,%s)
                     """
                     preferencia_query = """
-                        INSERT INTO user_escola (user_id, escola_id, escola_priority_id)
-                        VALUES (%s, %s, %s)
+                        INSERT INTO user_escola (user_id, escola_id, escola_priority_id,oferta_um)
+                        VALUES (%s, %s, %s,%s)
                     """
                     cursor.execute(bolsa_query, (
-                        candidato_id, ilha_id, id_vinculo
+                        candidato_id, ilha_id, id_vinculo,oferta_num
                     ))
                     cursor.execute(preferencia_query, (
-                        candidato_id, id_escola, ordem_de_preferencia
+                        candidato_id, id_escola, ordem_de_preferencia,oferta_num
                     ))
         
         # Commit the transaction
