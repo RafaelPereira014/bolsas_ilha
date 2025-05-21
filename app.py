@@ -323,14 +323,15 @@ def update_account():
 
 @app.route('/mainpage')
 def mainpage():
+    curr_oferta = get_curr_oferta()
     no_bolsas = total_bolsas()
     no_escolas = total_escolas()
     no_users = total_users()
-    no_colocados = total_colocados()
+    no_colocados = total_colocados(curr_oferta)
     all_schools = get_all_escola_names()
-    colocados = get_colocados()
+    colocados = get_colocados(curr_oferta)
     vagas = get_vagas_per_bolsa()
-    curr_oferta = get_curr_oferta()
+    
     
     for vaga in vagas:
         vaga['total_vagas'] = int(vaga['total_vagas'] or 0)  
@@ -1027,6 +1028,7 @@ def get_token():
 
 @app.route('/Bolsas/SaoMiguel')
 def bolsa_sao_miguel():
+    curr_oferta = get_curr_oferta()
     bolsa_id = 42
     page = request.args.get('page', 1, type=int)  # Get the page number, default to 1
     per_page = 10  # Number of users per page
@@ -1037,7 +1039,7 @@ def bolsa_sao_miguel():
         return render_template('/Bolsas/SaoMiguel.html', user_info=[], escolas_bolsa=[], pagination=None, uploaded_documents=uploaded_documents)
 
     # Fetch all user info and sort by final grade before pagination
-    user_info = get_user_info(42,user_ids)
+    user_info = get_user_info(42,user_ids,curr_oferta)
     
     user_info_sorted = sorted(user_info, key=lambda x: x['nota_final'], reverse=True)
 
@@ -1119,6 +1121,7 @@ def bolsa_sao_miguel():
 
 @app.route('/Bolsas/Terceira', methods=['GET', 'POST'])
 def bolsa_terceira():
+    curr_oferta = get_curr_oferta()
     bolsa_id = 43
     page = request.args.get('page', 1, type=int)  # Get the page number, default to 1
     per_page = 10  # Number of users per page
@@ -1130,7 +1133,7 @@ def bolsa_terceira():
         return render_template('/Bolsas/Terceira.html', user_info=[], escolas_bolsa=[], pagination=None, uploaded_documents=uploaded_documents)
 
     # Fetch all user info and sort by final grade before pagination
-    user_info = get_user_info(43,user_ids)
+    user_info = get_user_info(43,user_ids,curr_oferta)
     user_info_sorted = sorted(user_info, key=lambda x: x['nota_final'], reverse=True)
     
 
@@ -1214,6 +1217,7 @@ def bolsa_terceira():
 
 @app.route('/Bolsas/SantaMaria')
 def bolsa_santa_maria():
+    curr_oferta = get_curr_oferta()
     bolsa_id = 41
     page = request.args.get('page', 1, type=int)  # Get the page number, default to 1
     per_page = 10  # Number of users per page
@@ -1225,7 +1229,7 @@ def bolsa_santa_maria():
         return render_template('/Bolsas/SantaMaria.html', user_info=[], escolas_bolsa=[], pagination=None, uploaded_documents=uploaded_documents)
 
     # Fetch all user info and sort by final grade before pagination
-    user_info = get_user_info(41,user_ids)
+    user_info = get_user_info(41,user_ids,curr_oferta)
     user_info_sorted = sorted(user_info, key=lambda x: x['nota_final'], reverse=True)
 
     # Paginate the sorted user info
@@ -1306,6 +1310,7 @@ def bolsa_santa_maria():
 
 @app.route('/Bolsas/Faial')
 def bolsa_faial():
+    curr_oferta = get_curr_oferta()
     bolsa_id = 47
     page = request.args.get('page', 1, type=int)  # Get the page number, default to 1
     per_page = 10  # Number of users per page
@@ -1317,7 +1322,7 @@ def bolsa_faial():
         return render_template('/Bolsas/Faial.html', user_info=[], escolas_bolsa=[], pagination=None, uploaded_documents=uploaded_documents)
 
     # Fetch all user info and sort by final grade before pagination
-    user_info = get_user_info(47,user_ids)
+    user_info = get_user_info(47,user_ids,curr_oferta)
     user_info_sorted = sorted(user_info, key=lambda x: x['nota_final'], reverse=True)
 
     # Paginate the sorted user info
@@ -1398,6 +1403,7 @@ def bolsa_faial():
 
 @app.route('/Bolsas/Pico')
 def bolsa_pico():
+    curr_oferta = get_curr_oferta()
     bolsa_id = 46
     page = request.args.get('page', 1, type=int)  # Get the page number, default to 1
     per_page = 10  # Number of users per page
@@ -1409,7 +1415,7 @@ def bolsa_pico():
         return render_template('/Bolsas/Pico.html', user_info=[], escolas_bolsa=[], pagination=None, uploaded_documents=uploaded_documents)
 
     # Fetch all user info and sort by final grade before pagination
-    user_info = get_user_info(46,user_ids)
+    user_info = get_user_info(46,user_ids,curr_oferta)
     user_info_sorted = sorted(user_info, key=lambda x: x['nota_final'], reverse=True)
 
     # Paginate the sorted user info
@@ -1490,6 +1496,7 @@ def bolsa_pico():
 
 @app.route('/Bolsas/SaoJorge')
 def bolsa_sao_jorge():
+    curr_oferta = get_curr_oferta()
     bolsa_id = 45
     page = request.args.get('page', 1, type=int)  # Get the page number, default to 1
     per_page = 10  # Number of users per page
@@ -1501,7 +1508,7 @@ def bolsa_sao_jorge():
         return render_template('/Bolsas/SaoJorge.html', user_info=[], escolas_bolsa=[], pagination=None, uploaded_documents=uploaded_documents)
 
     # Fetch all user info and sort by final grade before pagination
-    user_info = get_user_info(45,user_ids)
+    user_info = get_user_info(45,user_ids,curr_oferta)
     user_info_sorted = sorted(user_info, key=lambda x: x['nota_final'], reverse=True)
 
     # Paginate the sorted user info
@@ -1582,6 +1589,7 @@ def bolsa_sao_jorge():
 
 @app.route('/Bolsas/Graciosa')
 def bolsa_graciosa():
+    curr_oferta = get_curr_oferta()
     bolsa_id = 44
     page = request.args.get('page', 1, type=int)  # Get the page number, default to 1
     per_page = 10  # Number of users per page
@@ -1593,7 +1601,7 @@ def bolsa_graciosa():
         return render_template('/Bolsas/Graciosa.html', user_info=[], escolas_bolsa=[], pagination=None, uploaded_documents=uploaded_documents)
 
     # Fetch all user info and sort by final grade before pagination
-    user_info = get_user_info(44,user_ids)
+    user_info = get_user_info(44,user_ids,curr_oferta)
     user_info_sorted = sorted(user_info, key=lambda x: x['nota_final'], reverse=True)
 
     # Paginate the sorted user info
@@ -1673,6 +1681,7 @@ def bolsa_graciosa():
 
 @app.route('/Bolsas/Flores')
 def bolsa_flores():
+    curr_oferta = get_curr_oferta()
     bolsa_id = 48
     page = request.args.get('page', 1, type=int)  # Get the page number, default to 1
     per_page = 10  # Number of users per page
@@ -1684,7 +1693,7 @@ def bolsa_flores():
         return render_template('/Bolsas/Flores.html', user_info=[], escolas_bolsa=[], pagination=None, uploaded_documents=uploaded_documents)
 
     # Fetch all user info and sort by final grade before pagination
-    user_info = get_user_info(48,user_ids)
+    user_info = get_user_info(48,user_ids,curr_oferta)
     user_info_sorted = sorted(user_info, key=lambda x: x['nota_final'], reverse=True)
 
     # Paginate the sorted user info
@@ -1765,6 +1774,7 @@ def bolsa_flores():
 
 @app.route('/Bolsas/Corvo')
 def bolsa_corvo():
+    curr_oferta = get_curr_oferta()
     bolsa_id = 49
     page = request.args.get('page', 1, type=int)  # Get the page number, default to 1
     per_page = 10  # Number of users per page
@@ -1776,7 +1786,7 @@ def bolsa_corvo():
         return render_template('/Bolsas/Corvo.html', user_info=[], escolas_bolsa=[], pagination=None, uploaded_documents=uploaded_documents)
 
     # Fetch all user info and sort by final grade before pagination
-    user_info = get_user_info(49,user_ids)
+    user_info = get_user_info(49,user_ids,curr_oferta)
     user_info_sorted = sorted(user_info, key=lambda x: x['nota_final'], reverse=True)
 
     # Paginate the sorted user info

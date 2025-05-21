@@ -314,12 +314,13 @@ def total_users():
     # Return the first element of the tuple
     return results[0] if results else 0  # Return 0 if results is None
 
-def total_colocados():
+def total_colocados(curr_oferta):
     # Create a database connection
     connection = connect_to_database()
     cursor = connection.cursor()
     
-    cursor.execute("SELECT COUNT(*) FROM users where estado='aceite' ")
+    # Correctly use the parameter in the query
+    cursor.execute("SELECT COUNT(*) FROM users WHERE estado = 'aceite' AND oferta_num = %s", (curr_oferta,))
     results = cursor.fetchone()
     
     cursor.close()

@@ -5,7 +5,7 @@ def connect_to_database():
     """Establishes a connection to the MySQL database."""
     return pymysql.connect(**db_config)
 
-def get_user_info(bolsa_id, user_ids):
+def get_user_info(bolsa_id, user_ids,oferta_num):
     connection = connect_to_database()
     cursor = connection.cursor()
 
@@ -27,11 +27,12 @@ def get_user_info(bolsa_id, user_ids):
         JOIN userbolsas ub ON u.id = ub.user_id
         LEFT JOIN contrato c ON ub.contrato_id = c.id
         WHERE u.id IN ({placeholders}) 
-        AND ub.Bolsa_id = %s  -- Ensure that the user is linked to the correct bolsa_id
+        AND ub.Bolsa_id = %s  
+        AND u.oferta_num = %s
         ORDER BY u.nota_final DESC
         """
         # Add bolsa_id as the last parameter in the query execution
-        cursor.execute(query, user_ids + [bolsa_id])
+        cursor.execute(query, user_ids + [bolsa_id,oferta_num])
         results = cursor.fetchall()
 
         # Return results as a list of dictionaries, including tipo_contrato
@@ -157,7 +158,7 @@ def get_colocados_by_user_id(user_id):
 
     return colocados_list
         
-def get_colocados():
+def get_colocados(curr_oferta):
     connection = connect_to_database()  # Ensure this function is defined elsewhere
     cursor = connection.cursor()
 
@@ -170,13 +171,14 @@ def get_colocados():
         co.tipo AS tipo_contrato, 
         c.escola_priority_id, 
         c.placement_date,
-        c.estado  -- Include estado from colocados
+        c.estado  
     FROM colocados AS c
     LEFT JOIN Bolsa AS b ON c.bolsa_id = b.id
     LEFT JOIN contrato AS co ON c.contrato_id = co.id
+    WHERE c.oferta_num = %s
     ORDER BY c.placement_date DESC
     """
-    cursor.execute(query,)
+    cursor.execute(query,(curr_oferta))
     results = cursor.fetchall()
 
     colocados_list = [
