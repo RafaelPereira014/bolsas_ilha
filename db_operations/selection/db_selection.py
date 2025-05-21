@@ -86,13 +86,7 @@ def execute_batch_insert(query, data):
         connection.close()
         
 def get_candidates_by_bolsa(bolsa_id, contrato_tipo):
-    """
-    Retrieve candidates based on bolsa_id and contrato_tipo using a stored procedure.
-
-    :param bolsa_id: The ID of the bolsa.
-    :param contrato_tipo: The type of contract (1, 2, or 3).
-    :return: A list of candidates that match the criteria.
-    """
+    
     # Establish a database connection
     conn = None
     try:

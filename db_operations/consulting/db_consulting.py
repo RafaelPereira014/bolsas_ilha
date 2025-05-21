@@ -553,3 +553,52 @@ def get_curr_oferta():
         # Close cursor and connection
         cursor.close()
         connection.close()
+        
+def get_ofertas():
+    # Create a database connection
+    connection = connect_to_database()  # Ensure this function is defined and works correctly
+    cursor = connection.cursor()
+
+    try:
+        # Query to get all oferta_num values, ordered by oferta_num descending
+        query = """
+            SELECT oferta_num
+            FROM oferta
+            ORDER BY oferta_num DESC
+        """
+        cursor.execute(query)  # Execute the query
+        results = cursor.fetchall()
+
+        # Extract and return all oferta_num values as a list
+        oferta_nums = [row[0] for row in results]
+        return oferta_nums
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return []  # Return an empty list on error
+
+    finally:
+        # Close cursor and connection
+        cursor.close()
+        connection.close()
+        
+def get_users_by_oferta(selected_oferta):
+
+    connection = connect_to_database()  # Ensure this function is defined correctly
+    cursor = connection.cursor()  # Use dictionary=True for fetching rows as dicts
+
+    try:
+        # SQL query to fetch users
+        query = "SELECT * FROM users WHERE oferta_num = %s"
+        cursor.execute(query, (selected_oferta,))  # Parameterized query to prevent SQL injection
+        results = cursor.fetchall()  # Fetch all matching rows
+        return results
+
+    except Exception as e:
+        print(f"Error fetching users: {e}")
+        return None
+
+    finally:
+        # Always close the cursor and connection
+        cursor.close()
+        connection.close()

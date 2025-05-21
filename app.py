@@ -857,6 +857,35 @@ def metadatapage():
     scores = get_all_user_scores(curr_oferta)
     return render_template('consulta.html', scores=scores,  total_count=total_count,curr_oferta=curr_oferta)
 
+@app.route('/historico_ofertas')
+def historico_ofertas():
+    
+    ofertas = get_ofertas()  # Fetch available years
+    selected_oferta = request.args.get('ano')
+    print(selected_oferta)
+    per_page = int(request.args.get('per_page', 10))  # Default to 10 items per page
+    page = int(request.args.get('page', 1))  # Default to the first page
+    search = request.args.get('search', default='')
+
+    candidaturas = get_users_by_oferta(selected_oferta)
+    
+    # # Check if the "Limpar" button was clicked
+    # if request.args.get('clear_search'):
+    #     search = ''  # Clear the search parameter
+
+    # if selected_year:
+    #     candidaturas = admin.get_candidaturas_by_filters(selected_year, per_page, page, search)
+    #     #no_candidaturas = admin.get_candidaturas_count(selected_year)
+    # else:
+    #     candidaturas = admin.get_all_candidaturas(per_page, page)
+    #     #no_candidaturas = admin.get_candidaturas_count()
+
+    
+     
+    return render_template('geral_ofertas.html',per_page=per_page,page=page,ofertas=ofertas,candidaturas=candidaturas)
+
+
+
 @app.route('/view_escolas/<int:user_id>/<int:bolsa_id>')
 def fetch_escolas(user_id, bolsa_id):
     escolas = get_escolas_by_bolsa(user_id, bolsa_id)
