@@ -591,12 +591,14 @@ def get_users_by_oferta(selected_oferta):
         query = """
             SELECT 
                 users.*, 
-                colocados.placement_date, 
+                colocados.placement_date AS latest_placement_date, 
                 colocados.alterado_por,
                 colocados.escola_nome
             FROM users
             JOIN (
-                SELECT user_id, MAX(placement_date) AS latest_placement_date,escola_nome
+                SELECT 
+                    user_id, 
+                    MAX(placement_date) AS latest_placement_date
                 FROM colocados
                 GROUP BY user_id
             ) latest_colocados
