@@ -95,7 +95,7 @@ def login():
             session['username'] = user['username']
             return redirect(url_for('mainpage'))
         else:
-            flash('Invalid email or password', 'danger')
+            flash('Email ou passowrd inválidos', 'danger')
 
         cursor.close()
         conn.close()
