@@ -520,9 +520,7 @@ def get_all_escola_names():
         connection.close()
         
 def get_curr_oferta():
-    """
-    Fetch oferta_num values where data_fim is in the next year.
-    """
+    
     # Create a database connection
     connection = connect_to_database()  # Ensure this function is defined and works correctly
     cursor = connection.cursor()
