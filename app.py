@@ -604,19 +604,15 @@ def limpar_estados():
     curr_oferta = get_curr_oferta()
     try:
         with connection.cursor() as cursor:
-            # Update all rows in Users to set estado to 'livre'
             update_query = "UPDATE users SET estado = 'livre' where oferta_num=%s"
             cursor.execute(update_query,curr_oferta)
             
-            # Delete all rows from colocados
             delete_query = "DELETE FROM colocados where oferta_num=%s"
             cursor.execute(delete_query,curr_oferta)
             
-            # Delete all rows from colocados
             delete_query2 = "DELETE FROM vagas_per_bolsa"
             cursor.execute(delete_query2)
             
-            # Delete all rows from colocados
             delete_query3 = "DELETE FROM documents"
             cursor.execute(delete_query3)
             
