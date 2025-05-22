@@ -332,8 +332,9 @@ def mainpage():
     vagas = get_vagas_per_bolsa()
     
     
-    for vaga in vagas:
-        vaga['total_vagas'] = int(vaga['total_vagas'] or 0)  
+    total_sum = sum(vaga['total_vagas'] or 0 for vaga in vagas)
+
+    
 
 
     colocados_per_escola = {escola: 0 for escola in all_schools}
@@ -360,7 +361,8 @@ def mainpage():
         total_aceite=total_aceite,
         total_negado=total_negado,
         vagas=vagas,
-        curr_oferta=curr_oferta
+        curr_oferta=curr_oferta,
+        total_vagas = total_sum
     )
 
 @app.route('/gerir_utilizadores')
