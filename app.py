@@ -3,13 +3,13 @@ import io
 import requests
 import pymysql
 import logging
+import urllib
 from flask import Response, abort, request, redirect, url_for, flash
 from flask import Flask, flash, redirect, request, jsonify, render_template, send_from_directory, session, url_for
 from flask import request, send_file
 from flask import render_template, request, send_file
 from datetime import date
 from openpyxl import Workbook
-import urllib
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
 from config import AUTH_URL, CLIENT_ID, CLIENT_SECRET, db_config
