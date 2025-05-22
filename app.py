@@ -1154,7 +1154,7 @@ def bolsa_sao_miguel():
             io.BytesIO(csv_io.getvalue().encode('utf-8')),
             mimetype='text/csv',
             as_attachment=True,
-            download_name='bolsa_saomiguel.csv'
+            download_name='bolsa_saomiguel.csv',curr_oferta=curr_oferta
         )
 
     return render_template('/Bolsas/SaoMiguel.html', user_info=paginated_user_info, pagination=pagination, uploaded_documents=uploaded_documents)
@@ -1249,7 +1249,7 @@ def bolsa_terceira():
             io.BytesIO(csv_io.getvalue().encode('utf-8')),
             mimetype='text/csv',
             as_attachment=True,
-            download_name='bolsa_terceira.csv'
+            download_name='bolsa_terceira.csv',curr_oferta=curr_oferta
         )
 
     return render_template('/Bolsas/Terceira.html', user_info=paginated_user_info, escolas_bolsa=escolas_bolsa, pagination=pagination, uploaded_documents=uploaded_documents)
@@ -1343,7 +1343,7 @@ def bolsa_santa_maria():
             io.BytesIO(csv_io.getvalue().encode('utf-8')),
             mimetype='text/csv',
             as_attachment=True,
-            download_name='bolsa_santamaria.csv'
+            download_name='bolsa_santamaria.csv',curr_oferta=curr_oferta
         )
 
     return render_template('/Bolsas/SantaMaria.html', user_info=paginated_user_info, escolas_bolsa=escolas_bolsa, pagination=pagination, uploaded_documents=uploaded_documents)
@@ -1436,7 +1436,7 @@ def bolsa_faial():
             io.BytesIO(csv_io.getvalue().encode('utf-8')),
             mimetype='text/csv',
             as_attachment=True,
-            download_name='bolsa_faial.csv'
+            download_name='bolsa_faial.csv',curr_oferta=curr_oferta
         )
 
     return render_template('/Bolsas/Faial.html', user_info=paginated_user_info, escolas_bolsa=escolas_bolsa, pagination=pagination, uploaded_documents=uploaded_documents)
@@ -1529,7 +1529,7 @@ def bolsa_pico():
             io.BytesIO(csv_io.getvalue().encode('utf-8')),
             mimetype='text/csv',
             as_attachment=True,
-            download_name='bolsa_pico.csv'
+            download_name='bolsa_pico.csv',curr_oferta=curr_oferta
         )
 
     return render_template('/Bolsas/Pico.html', user_info=paginated_user_info, escolas_bolsa=escolas_bolsa, pagination=pagination, uploaded_documents=uploaded_documents)
@@ -1622,7 +1622,7 @@ def bolsa_sao_jorge():
             io.BytesIO(csv_io.getvalue().encode('utf-8')),
             mimetype='text/csv',
             as_attachment=True,
-            download_name='bolsa_sjorge.csv'
+            download_name='bolsa_sjorge.csv',curr_oferta=curr_oferta
         )
 
     return render_template('/Bolsas/SaoJorge.html', user_info=paginated_user_info, escolas_bolsa=escolas_bolsa, pagination=pagination, uploaded_documents=uploaded_documents)
@@ -1715,7 +1715,7 @@ def bolsa_graciosa():
             io.BytesIO(csv_io.getvalue().encode('utf-8')),
             mimetype='text/csv',
             as_attachment=True,
-            download_name='bolsa_graciosa.csv'
+            download_name='bolsa_graciosa.csv',curr_oferta=curr_oferta
         )
     return render_template('/Bolsas/Graciosa.html', user_info=paginated_user_info, escolas_bolsa=escolas_bolsa, pagination=pagination, uploaded_documents=uploaded_documents)
 
@@ -1807,7 +1807,7 @@ def bolsa_flores():
             io.BytesIO(csv_io.getvalue().encode('utf-8')),
             mimetype='text/csv',
             as_attachment=True,
-            download_name='bolsa_flores.csv'
+            download_name='bolsa_flores.csv',curr_oferta=curr_oferta
         )
 
     return render_template('/Bolsas/Flores.html', user_info=paginated_user_info, escolas_bolsa=escolas_bolsa, pagination=pagination, uploaded_documents=uploaded_documents)
@@ -1900,7 +1900,7 @@ def bolsa_corvo():
             io.BytesIO(csv_io.getvalue().encode('utf-8')),
             mimetype='text/csv',
             as_attachment=True,
-            download_name='bolsa_corvo.csv'
+            download_name='bolsa_corvo.csv',curr_oferta=curr_oferta
         )
 
     return render_template('/Bolsas/Corvo.html', user_info=paginated_user_info, escolas_bolsa=escolas_bolsa, pagination=pagination, uploaded_documents=uploaded_documents)
