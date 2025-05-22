@@ -617,3 +617,16 @@ def get_users_by_oferta(selected_oferta):
         # Always close the cursor and connection
         cursor.close()
         connection.close()
+
+def total_by_oferta(selected_oferta):
+    # Create a database connection
+    connection = connect_to_database()
+    cursor = connection.cursor()
+    
+    cursor.execute("SELECT COUNT(*) from users WHERE oferta_num = %s ", (selected_oferta,))
+    results = cursor.fetchone()
+    
+    cursor.close()
+    connection.close()
+    
+    return results[0] if results else 0  # Return 0 if results is None

@@ -864,7 +864,7 @@ def historico_ofertas():
     search = request.args.get('search', '').strip()  # Default to empty string
 
     candidaturas = get_users_by_oferta(selected_oferta) if selected_oferta else []
-    
+    candidaturas_count = total_by_oferta(selected_oferta)
 
     
     
@@ -887,7 +887,8 @@ def historico_ofertas():
         ofertas=ofertas,
         candidaturas=paginated_candidaturas,
         total=len(candidaturas),
-        selected_oferta=selected_oferta
+        selected_oferta=selected_oferta,
+        candidaturas_count = candidaturas_count
     )
 
 
