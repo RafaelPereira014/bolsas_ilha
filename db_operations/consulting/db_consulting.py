@@ -623,7 +623,7 @@ def total_by_oferta(selected_oferta):
     connection = connect_to_database()
     cursor = connection.cursor()
     
-    cursor.execute("SELECT COUNT(*) from users WHERE oferta_num = %s ", (selected_oferta,))
+    cursor.execute("SELECT COUNT(*) from colocados WHERE oferta_num = %s ", (selected_oferta,))
     results = cursor.fetchone()
     
     cursor.close()
